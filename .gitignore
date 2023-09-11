@@ -1,0 +1,6 @@
+.ipynb*
+.virtual_documents/
+.vscode/
+__pycache__
+build*/
+venv/
