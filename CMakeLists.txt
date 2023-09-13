@@ -44,7 +44,7 @@ add_subdirectory(src)
 
 # Tests
 # MODCAM_BUILD_TESTING override is provided in case this project is included in 
-# another project.
+# another project. Set it to TRUE to build this project's tests.
 if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODCAM_BUILD_TESTING)
    AND BUILD_TESTING)
 	add_subdirectory(tests)

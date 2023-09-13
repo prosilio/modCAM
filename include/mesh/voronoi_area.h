@@ -3,9 +3,8 @@
 
 #include <Eigen/LU>
 
-namespace Mesh
-{
-	void voronoi_area();
+namespace Mesh {
+void voronoiAreaOf();
 }
 
 #endif
