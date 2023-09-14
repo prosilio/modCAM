@@ -1,5 +1,5 @@
 #include "mesh/voronoi_area.h"
 
-namespace Mesh {
-void voronoiAreaOf() { return; }
-} // namespace Mesh
+namespace mesh {
+void voronoi_area_of() { return; }
+} // namespace mesh
