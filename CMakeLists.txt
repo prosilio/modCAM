@@ -1,3 +1,20 @@
+# Copyright 2023 prosilio
+# 
+# This file is part of modCAM, open source software for Computer Aided
+# Manufacturing research.
+# 
+# modCAM is free software: you can redistribute it and/or modify it under the 
+# terms of the GNU General Public License as published by the Free Software 
+# Foundation, either version 3 of the License, or (at your option) any later 
+# version.
+# 
+# modCAM is distributed in the hope that it will be useful, but WITHOUT ANY 
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR 
+# A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License along with 
+# modCAM. If not, see <https://www.gnu.org/licenses/>. 
+
 cmake_minimum_required(VERSION 3.21...3.27)
 if(${CMAKE_VERSION} VERSION_LESS 3.12)
 	cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
@@ -10,14 +27,13 @@ if(EXISTS "${LOC_PATH}")
 endif()
 
 project(
-	modcam
+	modCAM
 	DESCRIPTION "Open source software for Computer Aided Manufacturing (CAM) research"
 	LANGUAGES CXX
 )
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	set(CMAKE_CXX_STANDARD 17)
-	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 	include(CTest)
 endif()
 
