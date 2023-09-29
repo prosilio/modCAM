@@ -33,7 +33,7 @@ target_link_libraries(modcam PRIVATE Eigen3::Eigen)
 target_include_directories(
 	modcam
 	PUBLIC
-		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+		$<BUILD_INTERFACE:${modCAM_SOURCE_DIR}/include>
 		$<INSTALL_INTERFACE:include>
 )
 target_compile_options(

@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-set(MESH_SRC_DIR "${CMAKE_SOURCE_DIR}/src/mesh")
+set(MESH_SRC_DIR "${modCAM_SOURCE_DIR}/src/mesh")
 
 set(
 	MESH_SRC
@@ -23,7 +23,7 @@ set(
 	"${MESH_SRC_DIR}/voronoi_area.cpp"
 )
 
-set(MESH_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include/mesh")
+set(MESH_INCLUDE_DIR "${modCAM_SOURCE_DIR}/include/mesh")
 
 set(
 	MESH_HEADERS

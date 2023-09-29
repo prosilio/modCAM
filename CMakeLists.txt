@@ -26,6 +26,8 @@ if(EXISTS "${LOC_PATH}")
 	message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build directory. Feel free to remove CMakeCache.txt and CMakeFiles.")
 endif()
 
+set(modCAM_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+
 project(
 	modCAM
 	DESCRIPTION "Open source software for Computer Aided Manufacturing (CAM) research"
@@ -59,9 +61,19 @@ add_subdirectory(external/pybind11)
 add_subdirectory(src)
 
 # Tests
-# MODCAM_BUILD_TESTING override is provided in case this project is included in 
+# MODCAM_BUILD_TEST override is provided in case this project is included in 
 # another project. Set it to TRUE to build this project's tests.
-if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODCAM_BUILD_TESTING)
-   AND BUILD_TESTING)
+option(BUILD_TEST "Build tests" ON)
+if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODCAM_BUILD_TEST)
+   AND BUILD_TEST)
 	add_subdirectory(tests)
+endif()
+
+# Documentation
+# MODCAM_BUILD_DOC override is provided in case this project is included in 
+# another project. Set it to TRUE to build this project's documentation.
+option(BUILD_DOC "Build documentation" ON)
+if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODCAM_BUILD_DOC)
+   AND BUILD_DOC)
+	add_subdirectory(docs)
 endif()

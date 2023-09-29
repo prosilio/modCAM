@@ -17,6 +17,12 @@
  * modCAM. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file voronoi_area.h
+ * @brief Voronoi area description
+ *
+ *
+ */
 #ifndef VORONOI_AREA_H
 #define VORONOI_AREA_H
 
