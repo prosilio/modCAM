@@ -17,19 +17,10 @@
  * modCAM. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef VORONOI_AREA_H
-#define VORONOI_AREA_H
-
-#include <Eigen/LU>
-
-namespace mesh {
-
 /**
- * Compute the Voronoi cell areas for the triangles in a mesh as described in
- * @cite Meyer2003.
+ * Mesh-related functionality for working with mesh representations of parts.
+ *
+ * The mesh namespace contains code for manipulating or extracting the
+ * properties of mesh representations of parts (such as the STL file format).
  */
-void voronoi_area_of();
-
-} // namespace mesh
-
-#endif
+namespace mesh {}
