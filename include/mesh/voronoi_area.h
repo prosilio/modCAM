@@ -19,17 +19,21 @@
 
 /**
  * @file voronoi_area.h
- * @brief Voronoi area description
+ * @brief Compute the Voronoi cell areas for the triangles in a mesh.
  *
- *
+ * @cite Meyer2003
  */
+
 #ifndef VORONOI_AREA_H
 #define VORONOI_AREA_H
 
 #include <Eigen/LU>
 
 namespace mesh {
+
+/** Compute Voronoi cell areas for the triangles in a mesh. */
 void voronoi_area_of();
-}
+
+} // namespace mesh
 
 #endif
