@@ -54,9 +54,8 @@ if(MODCAM_BUILD_PYTHON)
 	pybind11_add_module(py_modcam "${PY_MODCAM_SRC}")
 	target_link_libraries(
 		py_modcam
-		PUBLIC
-			modcam_objlib
 		PRIVATE
+			modcam_objlib
 			Eigen3::Eigen
 	)
 	set_target_properties(
