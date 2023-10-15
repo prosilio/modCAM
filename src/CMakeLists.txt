@@ -51,10 +51,7 @@ endif()
 
 if(MODCAM_BUILD_PYTHON)
 	include("py_modcam/SourceList.cmake")
-	pybind11_add_module(
-		py_modcam 
-		"${PY_MODCAM_SRC}"
-	)
+	pybind11_add_module(py_modcam "${PY_MODCAM_SRC}")
 	target_link_libraries(
 		py_modcam
 		PUBLIC
@@ -65,6 +62,7 @@ if(MODCAM_BUILD_PYTHON)
 	set_target_properties(
 		py_modcam
 		PROPERTIES
+			LIBRARY_OUTPUT_NAME "modcam"
 			LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
 	)
 endif()

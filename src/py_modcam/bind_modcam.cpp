@@ -23,7 +23,7 @@ namespace py = pybind11;
 
 void bind_mesh(py::module &);
 
-PYBIND11_MODULE(py_modcam, m) {
+PYBIND11_MODULE(modcam, m) {
 	m.doc() =
 		"Open source software for Computer Aided Manufacturing (CAM) research";
 
