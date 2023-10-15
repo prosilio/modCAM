@@ -15,3 +15,18 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
+add_executable(
+	modcam_test 
+	$<TARGET_OBJECTS:modcam_objlib> 
+	"${MODCAM_PROJECT_DIR}/tests/run_tests.cpp"
+)
+target_link_libraries(
+	modcam_test
+	PRIVATE
+		doctest
+)
+set_target_properties(
+	modcam_test
+	PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
+)

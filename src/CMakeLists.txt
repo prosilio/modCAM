@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-include(modcam/SourceList.cmake)
+include("modcam/SourceList.cmake")
 
 # External libraries
 find_package(Eigen3 REQUIRED NO_MODULE)
@@ -23,9 +23,8 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 add_library(modcam_objlib OBJECT "${MODCAM_SRC}" "${MODCAM_HEADERS}")
 target_link_libraries(
 	modcam_objlib
-	PUBLIC
-		doctest
 	PRIVATE
+		doctest
 		Eigen3::Eigen
 )
 target_include_directories(

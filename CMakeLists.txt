@@ -66,13 +66,7 @@ add_subdirectory(src)
 
 # Tests
 add_subdirectory("${MODCAM_PROJECT_DIR}/external/doctest")
-# add_subdirectory(tests)
-set(DOCTEST_CONFIG_FILE "tests/doctest_config.h")
-configure_file(
-	"${DOCTEST_CONFIG_FILE}.in"
-	"${DOCTEST_CONFIG_FILE}"
-)
-include_directories("${DOCTEST_CONFIG_FILE}")
+add_subdirectory(tests)
 
 # Documentation
 # MODCAM_BUILD_DOC override is provided in case this project is included in 
