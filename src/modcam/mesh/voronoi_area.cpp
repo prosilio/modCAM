@@ -17,8 +17,16 @@
  * modCAM. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "mesh/voronoi_area.h"
+#include "modcam/mesh/voronoi_area.h"
 
 namespace mesh {
-void voronoi_area_of() { return; }
+double voronoi_area_of() { return 1.0; }
 } // namespace mesh
+
+#include <doctest/doctest.h>
+
+// Tests
+TEST_CASE("Test Voronoi area function") {
+	CHECK(mesh::voronoi_area_of() == 1.0);
+	CHECK(mesh::voronoi_area_of() == 2.0);
+}

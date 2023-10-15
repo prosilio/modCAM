@@ -17,13 +17,17 @@
  * modCAM. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <pybind11/eigen.h>
-#include <pybind11/pybind11.h>
+#ifndef VORONOI_AREA_H
+#define VORONOI_AREA_H
 
-#include "mesh/voronoi_area.h"
+namespace mesh {
 
-namespace py = pybind11;
+/**
+ * Compute the Voronoi cell areas for the triangles in a mesh as described in
+ * @cite Meyer2003.
+ */
+double voronoi_area_of();
 
-void bind_mesh(py::module &m) {
-	m.def("voronoi_area_of", &mesh::voronoi_area_of);
-}
+} // namespace mesh
+
+#endif

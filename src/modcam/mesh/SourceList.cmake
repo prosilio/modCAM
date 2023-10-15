@@ -15,16 +15,13 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-set(MESH_SRC_DIR "${modCAM_SOURCE_DIR}/src/mesh")
-
+set(MESH_SRC_DIR "${MODCAM_SRC_DIR}/mesh")
 set(
 	MESH_SRC
-	"${MESH_SRC_DIR}/bind_mesh.cpp"
 	"${MESH_SRC_DIR}/voronoi_area.cpp"
 )
 
-set(MESH_INCLUDE_DIR "${modCAM_SOURCE_DIR}/include/mesh")
-
+set(MESH_INCLUDE_DIR "${MODCAM_INCLUDE_DIR}/mesh")
 set(
 	MESH_HEADERS
 	"${MESH_INCLUDE_DIR}/voronoi_area.h"

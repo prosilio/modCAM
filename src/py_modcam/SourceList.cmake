@@ -15,3 +15,10 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
+set(PY_MODCAM_SRC_DIR "${MODCAM_PROJECT_DIR}/src/py_modcam")
+
+set(
+	PY_MODCAM_SRC
+	"${PY_MODCAM_SRC_DIR}/bind_modcam.cpp"
+	"${PY_MODCAM_SRC_DIR}/bind_mesh.cpp"
+)

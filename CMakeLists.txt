@@ -26,13 +26,13 @@ if(EXISTS "${LOC_PATH}")
 	message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build directory. Feel free to remove CMakeCache.txt and CMakeFiles.")
 endif()
 
-set(modCAM_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-
 project(
 	modCAM
 	DESCRIPTION "Open source software for Computer Aided Manufacturing (CAM) research"
 	LANGUAGES CXX
 )
+
+set(MODCAM_PROJECT_DIR "${PROJECT_SOURCE_DIR}")
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	set(CMAKE_CXX_STANDARD 17)
@@ -53,21 +53,26 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 	)
 endif()
 
-# External libraries
-find_package(Eigen3 REQUIRED NO_MODULE)
-add_subdirectory(external/pybind11)
+# Build options
+option(MODCAM_BUILD_CPP "Build C++ shared library" ON)
+option(MODCAM_BUILD_PYTHON "Build Python bindings" ON)
+
+if(MODCAM_BUILD_PYTHON)
+	add_subdirectory("${MODCAM_PROJECT_DIR}/external/pybind11")
+endif()
 
 # Project files
 add_subdirectory(src)
 
 # Tests
-# MODCAM_BUILD_TEST override is provided in case this project is included in 
-# another project. Set it to TRUE to build this project's tests.
-option(BUILD_TEST "Build tests" ON)
-if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODCAM_BUILD_TEST)
-   AND BUILD_TEST)
-	add_subdirectory(tests)
-endif()
+add_subdirectory("${MODCAM_PROJECT_DIR}/external/doctest")
+# add_subdirectory(tests)
+set(DOCTEST_CONFIG_FILE "tests/doctest_config.h")
+configure_file(
+	"${DOCTEST_CONFIG_FILE}.in"
+	"${DOCTEST_CONFIG_FILE}"
+)
+include_directories("${DOCTEST_CONFIG_FILE}")
 
 # Documentation
 # MODCAM_BUILD_DOC override is provided in case this project is included in 

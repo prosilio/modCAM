@@ -15,35 +15,62 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-include(mesh/SourceList.cmake)
+include(modcam/SourceList.cmake)
 
-set(
-	SRC
-	bind_modcam.cpp
-	"${MESH_SRC}"
-)
+# External libraries
+find_package(Eigen3 REQUIRED NO_MODULE)
 
-set(
-	HEADERS
-	"${MESH_HEADERS}"
-)
-
-pybind11_add_module(modcam "${SRC}" "${HEADERS}")
-target_link_libraries(modcam PRIVATE Eigen3::Eigen)
-target_include_directories(
-	modcam
+add_library(modcam_objlib OBJECT "${MODCAM_SRC}" "${MODCAM_HEADERS}")
+target_link_libraries(
+	modcam_objlib
 	PUBLIC
-		$<BUILD_INTERFACE:${modCAM_SOURCE_DIR}/include>
+		doctest
+	PRIVATE
+		Eigen3::Eigen
+)
+target_include_directories(
+	modcam_objlib
+	PUBLIC
+		$<BUILD_INTERFACE:${MODCAM_PROJECT_DIR}/include>
 		$<INSTALL_INTERFACE:include>
 )
 target_compile_options(
-	modcam
+	modcam_objlib
 	PRIVATE
 		$<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
 		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
-set_target_properties(
-	modcam
-	PROPERTIES
-		LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}
-)
+
+if(MODCAM_BUILD_CPP)
+	add_library(modcam_cpp SHARED $<TARGET_OBJECTS:modcam_objlib>)
+	set_target_properties(
+		modcam_cpp
+		PROPERTIES
+			LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
+	)
+endif()
+
+if(MODCAM_BUILD_PYTHON)
+	include("py_modcam/SourceList.cmake")
+	pybind11_add_module(
+		py_modcam 
+		$<TARGET_OBJECTS:modcam_objlib> 
+		"${PY_MODCAM_SRC}"
+	)
+	target_link_libraries(
+		py_modcam
+		PRIVATE
+			Eigen3::Eigen
+	)
+	target_include_directories(
+		py_modcam
+		PUBLIC
+			$<BUILD_INTERFACE:${MODCAM_PROJECT_DIR}/include>
+			$<INSTALL_INTERFACE:include>
+	)
+	set_target_properties(
+		py_modcam
+		PROPERTIES
+			LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
+	)
+endif()
