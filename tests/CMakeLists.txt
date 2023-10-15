@@ -16,17 +16,17 @@
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
 add_executable(
-	modcam_test 
+	test_modcam 
 	$<TARGET_OBJECTS:modcam_objlib> 
 	"${MODCAM_PROJECT_DIR}/tests/run_tests.cpp"
 )
 target_link_libraries(
-	modcam_test
+	test_modcam
 	PRIVATE
 		doctest
 )
 set_target_properties(
-	modcam_test
+	test_modcam
 	PROPERTIES
 		RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
 )
