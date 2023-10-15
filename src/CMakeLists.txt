@@ -53,19 +53,14 @@ if(MODCAM_BUILD_PYTHON)
 	include("py_modcam/SourceList.cmake")
 	pybind11_add_module(
 		py_modcam 
-		$<TARGET_OBJECTS:modcam_objlib> 
 		"${PY_MODCAM_SRC}"
 	)
 	target_link_libraries(
 		py_modcam
+		PUBLIC
+			modcam_objlib
 		PRIVATE
 			Eigen3::Eigen
-	)
-	target_include_directories(
-		py_modcam
-		PUBLIC
-			$<BUILD_INTERFACE:${MODCAM_PROJECT_DIR}/include>
-			$<INSTALL_INTERFACE:include>
 	)
 	set_target_properties(
 		py_modcam
