@@ -25,5 +25,6 @@
 namespace py = pybind11;
 
 void bind_mesh(py::module &m) {
-	m.def("voronoi_area_of", &mesh::voronoi_area_of);
+	m.def("voronoi_area_of", &mesh::voronoi_area_of,
+	      "Compute the Voronoi cell areas for the triangles in a mesh.");
 }
