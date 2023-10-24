@@ -15,8 +15,6 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-include("modcam/SourceList.cmake")
-
 # External libraries
 find_package(Eigen3 REQUIRED NO_MODULE)
 

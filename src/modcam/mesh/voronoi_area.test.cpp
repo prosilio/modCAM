@@ -18,7 +18,10 @@
  */
 
 #include "modcam/mesh/voronoi_area.h"
+#include <doctest/doctest.h>
 
-namespace mesh {
-double voronoi_area_of() { return 1.0; }
-} // namespace mesh
+// Tests
+TEST_CASE("Test Voronoi area function") {
+	CHECK(mesh::voronoi_area_of() == 1.0);
+	CHECK(mesh::voronoi_area_of() == 2.0);
+}

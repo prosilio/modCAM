@@ -62,11 +62,15 @@ if(MODCAM_BUILD_PYTHON)
 endif()
 
 # Project files
+include("src/modcam/SourceList.cmake")
 add_subdirectory(src)
 
 # Tests
-add_subdirectory("${MODCAM_PROJECT_DIR}/external/doctest")
-add_subdirectory(tests)
+option(MODCAM_BUILD_TESTS "Build tests" ON)
+if(MODCAM_BUILD_TESTS)
+	add_subdirectory("${MODCAM_PROJECT_DIR}/external/doctest")
+	add_subdirectory(tests)
+endif()
 
 # Documentation
 # MODCAM_BUILD_DOC override is provided in case this project is included in 

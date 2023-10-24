@@ -26,3 +26,8 @@ set(
 	MESH_HEADERS
 	"${MESH_INCLUDE_DIR}/voronoi_area.h"
 )
+
+set(
+	MESH_TEST_SRC
+	"${MESH_SRC_DIR}/voronoi_area.test.cpp"
+)

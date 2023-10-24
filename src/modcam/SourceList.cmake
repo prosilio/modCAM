@@ -29,3 +29,8 @@ set(
 	MODCAM_HEADERS
 	"${MESH_HEADERS}"
 )
+
+set(
+	MODCAM_TEST_SRC
+	"${MESH_TEST_SRC}"
+)

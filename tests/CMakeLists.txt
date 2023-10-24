@@ -18,12 +18,19 @@
 add_executable(
 	test_modcam 
 	$<TARGET_OBJECTS:modcam_objlib> 
+	"${MODCAM_TEST_SRC}"
 	"${MODCAM_PROJECT_DIR}/tests/run_tests.cpp"
 )
 target_link_libraries(
 	test_modcam
 	PRIVATE
 		doctest
+)
+target_include_directories(
+	test_modcam
+	PUBLIC
+		$<BUILD_INTERFACE:${MODCAM_PROJECT_DIR}/include>
+		$<INSTALL_INTERFACE:include>
 )
 set_target_properties(
 	test_modcam
