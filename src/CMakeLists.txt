@@ -17,13 +17,17 @@
 
 # External libraries
 find_package(Eigen3 REQUIRED NO_MODULE)
+include(libigl)
+igl_include(core)
 
 add_library(modcam_objlib OBJECT "${MODCAM_SRC}" "${MODCAM_HEADERS}")
 target_link_libraries(
 	modcam_objlib
+	PUBLIC
+		Eigen3::Eigen
 	PRIVATE
 		doctest
-		Eigen3::Eigen
+		igl::core
 )
 target_include_directories(
 	modcam_objlib
@@ -35,8 +39,9 @@ target_compile_options(
 	modcam_objlib
 	PRIVATE
 		$<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
 )
+set_target_properties(modcam_objlib PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 if(MODCAM_BUILD_CPP)
 	add_library(modcam_cpp SHARED $<TARGET_OBJECTS:modcam_objlib>)

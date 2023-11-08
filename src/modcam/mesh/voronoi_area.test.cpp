@@ -20,8 +20,27 @@
 #include "modcam/mesh/voronoi_area.h"
 #include <doctest/doctest.h>
 
+#include <cmath>
+
 // Tests
 TEST_CASE("Test Voronoi area function") {
-	CHECK(mesh::voronoi_area_of() == 1.0);
-	CHECK(mesh::voronoi_area_of() == 2.0);
+	SUBCASE("Equilateral triangle") {
+		const Eigen::MatrixX3d vertices{
+			{0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}, {0.5, std::sqrt(3.0) / 2.0, 0.0}};
+		const Eigen::MatrixX3i faces{{0, 1, 2}};
+		Eigen::MatrixX3d weights = mesh::voronoi_area_of(vertices, faces);
+		CHECK(weights(0) == doctest::Approx(0.14433757));
+		CHECK(weights(1) == doctest::Approx(0.14433757));
+		CHECK(weights(2) == doctest::Approx(0.14433757));
+	}
+
+	SUBCASE("Obtuse triangle") {
+		const Eigen::MatrixX3d vertices{
+			{0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}, {0.5, 0.1, 0.0}};
+		const Eigen::MatrixX3i faces{{0, 1, 2}};
+		Eigen::MatrixX3d weights = mesh::voronoi_area_of(vertices, faces);
+		CHECK(weights(0) == 0.0125);
+		CHECK(weights(1) == 0.0125);
+		CHECK(weights(2) == 0.025);
+	}
 }

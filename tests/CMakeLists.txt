@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
+find_package(Eigen3 REQUIRED NO_MODULE)
+
 add_executable(
 	test_modcam 
 	$<TARGET_OBJECTS:modcam_objlib> 
@@ -25,6 +27,7 @@ target_link_libraries(
 	test_modcam
 	PRIVATE
 		doctest
+		Eigen3::Eigen
 )
 target_include_directories(
 	test_modcam
