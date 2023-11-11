@@ -26,13 +26,19 @@
 
 #include <numbers>
 
+namespace {
+// Modulo function for looping backward
+// For example, mod(-1, 3) == 2, whereas -1 % 3 == -1
+int mod(int k, int n) { return ((k %= n) < 0) ? k + n : k; }
+} // namespace
+
 namespace mesh {
 Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
                                 const Eigen::MatrixXi &faces) {
 
 	Eigen::VectorXd area;
 	igl::doublearea(vertices, faces, area);
-	area.array() /= 2.0;
+	// area.array() /= 2.0;
 
 	Eigen::MatrixXd angles;
 	igl::internal_angles(vertices, faces, angles);
@@ -44,25 +50,26 @@ Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
 	igl::edge_lengths(vertices, faces, edge_squared);
 	edge_squared = edge_squared.cwiseProduct(edge_squared);
 
+	double right_angle = std::numbers::pi / 2.0;
 	Eigen::Array<bool, Eigen::Dynamic, 1> nonobtuse =
-		(angles.array() <= std::numbers::pi / 2.0).rowwise().all();
+		(angles.array() <= right_angle).rowwise().all();
 
 	int num_faces = faces.rows();
 	Eigen::MatrixXd v_area(num_faces, 3);
 
-	for (int row = 0; row < faces.rows(); row++) {
+	for (int row = 0; row < num_faces; row++) {
 		for (int col = 0; col < faces.cols(); col++) {
 			if (nonobtuse(row)) {
-				int i = (col - 1) % 3;
-				int j = (col + 1) % 3;
+				int i = mod(col - 1, 3);
+				int j = mod(col + 1, 3);
 				v_area(row, col) =
 					0.25 * (edge_squared(row, i) * half_cot(row, i) +
 				            edge_squared(row, j) * half_cot(row, j));
 			} else {
-				if (angles(row, col) > (std::numbers::pi / 2.0)) {
-					v_area(row, col) = area(row) / 2.0;
-				} else {
+				if (angles(row, col) > right_angle) {
 					v_area(row, col) = area(row) / 4.0;
+				} else {
+					v_area(row, col) = area(row) / 8.0;
 				}
 			}
 		}
