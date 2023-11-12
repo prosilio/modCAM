@@ -22,7 +22,7 @@
 
 #include <cmath>
 
-// Tests
+namespace modcam {
 TEST_CASE("Test Voronoi area function") {
 	SUBCASE("Equilateral triangle") {
 		const Eigen::MatrixX3d vertices{
@@ -44,3 +44,4 @@ TEST_CASE("Test Voronoi area function") {
 		CHECK(weights(2) == 0.025);
 	}
 }
+} // namespace modcam

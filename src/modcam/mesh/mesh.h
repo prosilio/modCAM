@@ -23,4 +23,4 @@
  * The mesh namespace contains code for manipulating or extracting the
  * properties of mesh representations of parts (such as the STL file format).
  */
-namespace mesh {}
+namespace modcam::mesh {}

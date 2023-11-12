@@ -17,20 +17,9 @@
  * modCAM. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef VORONOI_AREA_H
-#define VORONOI_AREA_H
-
-#include <Eigen/Core>
-
-namespace modcam::mesh {
-
 /**
- * Compute the Voronoi cell areas for the triangles in a mesh as described in
- * @cite Meyer2003.
+ * Open source software for Computer Aided Manufacturing (CAM) research.
+ *
+ * This is the project namespace.
  */
-Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
-                                const Eigen::MatrixXi &faces);
-
-} // namespace modcam::mesh
-
-#endif
+namespace modcam {}

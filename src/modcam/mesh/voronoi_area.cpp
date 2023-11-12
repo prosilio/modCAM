@@ -32,7 +32,7 @@ namespace {
 int mod(int k, int n) { return ((k %= n) < 0) ? k + n : k; }
 } // namespace
 
-namespace mesh {
+namespace modcam::mesh {
 Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
                                 const Eigen::MatrixXi &faces) {
 
@@ -77,4 +77,4 @@ Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
 
 	return v_area;
 }
-} // namespace mesh
+} // namespace modcam::mesh
