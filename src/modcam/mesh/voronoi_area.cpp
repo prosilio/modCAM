@@ -38,7 +38,7 @@ Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
 
 	Eigen::VectorXd area;
 	igl::doublearea(vertices, faces, area);
-	// area.array() /= 2.0;
+	area.array() /= 2.0;
 
 	Eigen::MatrixXd angles;
 	igl::internal_angles(vertices, faces, angles);
@@ -67,9 +67,9 @@ Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
 				            edge_squared(row, j) * half_cot(row, j));
 			} else {
 				if (angles(row, col) > right_angle) {
-					v_area(row, col) = area(row) / 4.0;
+					v_area(row, col) = area(row) / 2.0;
 				} else {
-					v_area(row, col) = area(row) / 8.0;
+					v_area(row, col) = area(row) / 4.0;
 				}
 			}
 		}
