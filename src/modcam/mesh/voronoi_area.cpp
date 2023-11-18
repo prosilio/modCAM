@@ -24,6 +24,7 @@
 #include <igl/edge_lengths.h>
 #include <igl/internal_angles.h>
 
+#include <cassert>
 #include <numbers>
 
 namespace {
@@ -35,6 +36,15 @@ int mod(int k, int n) { return ((k %= n) < 0) ? k + n : k; }
 namespace modcam::mesh {
 Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
                                 const Eigen::MatrixXi &faces) {
+
+	if (faces.size() == 0) {
+		return Eigen::MatrixXd(0, 0);
+	}
+
+	int num_faces = faces.rows();
+	if (vertices.size() == 0) {
+		return Eigen::MatrixXd::Zero(num_faces, 3);
+	}
 
 	Eigen::VectorXd area;
 	igl::doublearea(vertices, faces, area);
@@ -54,7 +64,6 @@ Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
 	Eigen::Array<bool, Eigen::Dynamic, 1> nonobtuse =
 		(angles.array() <= right_angle).rowwise().all();
 
-	int num_faces = faces.rows();
 	Eigen::MatrixXd v_area(num_faces, 3);
 
 	for (int row = 0; row < num_faces; row++) {
