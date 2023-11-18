@@ -43,5 +43,35 @@ TEST_CASE("Test Voronoi area function") {
 		CHECK(weights(1) == 0.0125);
 		CHECK(weights(2) == 0.025);
 	}
+
+	SUBCASE("Colocated vertices") {
+		const Eigen::MatrixX3d vertices{
+			{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
+		const Eigen::MatrixX3i faces{{0, 1, 2}};
+		Eigen::MatrixX3d weights = mesh::voronoi_area_of(vertices, faces);
+		CHECK(weights(0) == 0.0);
+		CHECK(weights(1) == 0.0);
+		CHECK(weights(2) == 0.0);
+	}
+
+	SUBCASE("Face singularity") {
+		const Eigen::MatrixX3d vertices{
+			{0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}, {0.5, 0.1, 0.0}};
+		const Eigen::MatrixX3i faces{{0, 0, 0}};
+		Eigen::MatrixX3d weights = mesh::voronoi_area_of(vertices, faces);
+		CHECK(weights(0) == 0.0);
+		CHECK(weights(1) == 0.0);
+		CHECK(weights(2) == 0.0);
+	}
+
+	SUBCASE("Colinear vertices") {
+		const Eigen::MatrixX3d vertices{
+			{0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}, {0.5, 0.0, 0.0}};
+		const Eigen::MatrixX3i faces{{0, 1, 2}};
+		Eigen::MatrixX3d weights = mesh::voronoi_area_of(vertices, faces);
+		CHECK(weights(0) == 0.0);
+		CHECK(weights(1) == 0.0);
+		CHECK(weights(2) == 0.0);
+	}
 }
 } // namespace modcam
