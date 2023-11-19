@@ -105,5 +105,22 @@ TEST_CASE("Test Voronoi area function") {
 		CHECK(weights(1) == 0.0);
 		CHECK(weights(2) == 0.0);
 	}
+
+	SUBCASE("2D vertex array") {
+		const Eigen::MatrixX3d vertices{{0.0, 0.0}, {1.0, 0.0}, {0.5, 0.1}};
+		const Eigen::MatrixX3i faces{{0, 1, 2}};
+		Eigen::MatrixX3d weights = mesh::voronoi_area_of(vertices, faces);
+		CHECK(weights(0) == 0.0125);
+		CHECK(weights(1) == 0.0125);
+		CHECK(weights(2) == 0.025);
+	}
+
+	SUBCASE("Improperly sized face array") {
+		const Eigen::MatrixX3d vertices{
+			{0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}, {0.5, 0.1, 0.0}};
+		const Eigen::MatrixXi faces{{0, 1}};
+		CHECK_THROWS_AS(mesh::voronoi_area_of(vertices, faces),
+		                std::invalid_argument);
+	}
 }
 } // namespace modcam

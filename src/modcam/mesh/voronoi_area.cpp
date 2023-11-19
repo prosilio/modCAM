@@ -24,8 +24,8 @@
 #include <igl/edge_lengths.h>
 #include <igl/internal_angles.h>
 
-#include <cassert>
 #include <numbers>
+#include <stdexcept>
 
 namespace {
 // Modulo function for looping backward
@@ -39,6 +39,13 @@ Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
 
 	if (faces.size() == 0) {
 		return Eigen::MatrixXd(0, 0);
+	}
+
+	int vertices_per_face = faces.cols();
+	if (vertices_per_face != 3) {
+		throw std::invalid_argument(
+			"There should be three vertices per face, i.e. the faces array "
+			"should have three columns.");
 	}
 
 	int num_faces = faces.rows();
@@ -67,7 +74,7 @@ Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
 	Eigen::MatrixXd v_area(num_faces, 3);
 
 	for (int row = 0; row < num_faces; row++) {
-		for (int col = 0; col < faces.cols(); col++) {
+		for (int col = 0; col < vertices_per_face; col++) {
 			if (nonobtuse(row)) {
 				int i = mod(col - 1, 3);
 				int j = mod(col + 1, 3);
