@@ -28,8 +28,8 @@ namespace modcam::mesh {
  * Compute the Voronoi cell areas for the triangles in a mesh as described in
  * @cite Meyer2003.
  */
-Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
-                                const Eigen::MatrixXi &faces);
+Eigen::MatrixXd voronoi_area(const Eigen::MatrixXd &vertices,
+                             const Eigen::MatrixXi &faces);
 
 } // namespace modcam::mesh
 

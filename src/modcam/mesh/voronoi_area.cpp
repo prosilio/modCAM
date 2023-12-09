@@ -30,8 +30,8 @@
 #include <stdexcept>
 
 namespace modcam::mesh {
-Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
-                                const Eigen::MatrixXi &faces) {
+Eigen::MatrixXd voronoi_area(const Eigen::MatrixXd &vertices,
+                             const Eigen::MatrixXi &faces) {
 
 	if (faces.size() == 0) {
 		return Eigen::MatrixXd(0, 0);
