@@ -18,16 +18,22 @@
 set(MESH_SRC_DIR "${MODCAM_SRC_DIR}/mesh")
 set(
 	MESH_SRC
+	"${MESH_SRC_DIR}/per_vertex_basis.cpp"
+	"${MESH_SRC_DIR}/per_vertex_normals.cpp"
 	"${MESH_SRC_DIR}/voronoi_area.cpp"
 )
 
 set(MESH_INCLUDE_DIR "${MODCAM_INCLUDE_DIR}/mesh")
 set(
 	MESH_HEADERS
+	"${MESH_INCLUDE_DIR}/per_vertex_basis.h"
+	"${MESH_INCLUDE_DIR}/per_vertex_normals.h"
 	"${MESH_INCLUDE_DIR}/voronoi_area.h"
 )
 
 set(
 	MESH_TEST_SRC
+	"${MESH_SRC_DIR}/per_vertex_basis.test.cpp"
+	"${MESH_SRC_DIR}/per_vertex_normals.test.cpp"
 	"${MESH_SRC_DIR}/voronoi_area.test.cpp"
 )

@@ -19,6 +19,8 @@
 
 #include "modcam/mesh/voronoi_area.h"
 
+#include "modcam/utility/modulus.h"
+
 #include <igl/cotmatrix_entries.h>
 #include <igl/doublearea.h>
 #include <igl/edge_lengths.h>
@@ -26,12 +28,6 @@
 
 #include <numbers>
 #include <stdexcept>
-
-namespace {
-// Modulo function for looping backward
-// For example, mod(-1, 3) == 2, whereas -1 % 3 == -1
-int mod(int k, int n) { return ((k %= n) < 0) ? k + n : k; }
-} // namespace
 
 namespace modcam::mesh {
 Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
@@ -76,8 +72,8 @@ Eigen::MatrixXd voronoi_area_of(const Eigen::MatrixXd &vertices,
 	for (int row = 0; row < num_faces; row++) {
 		for (int col = 0; col < vertices_per_face; col++) {
 			if (nonobtuse(row)) {
-				int i = mod(col - 1, 3);
-				int j = mod(col + 1, 3);
+				int i = utility::mod(col - 1, vertices_per_face);
+				int j = utility::mod(col + 1, vertices_per_face);
 				v_area(row, col) =
 					0.25 * (edge_squared(row, i) * half_cot(row, i) +
 				            edge_squared(row, j) * half_cot(row, j));

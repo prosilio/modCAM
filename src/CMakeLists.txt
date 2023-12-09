@@ -34,6 +34,8 @@ target_include_directories(
 	PUBLIC
 		$<BUILD_INTERFACE:${MODCAM_PROJECT_DIR}/include>
 		$<INSTALL_INTERFACE:include>
+	PRIVATE
+		${MODCAM_PROJECT_DIR}/src
 )
 target_compile_options(
 	modcam_objlib

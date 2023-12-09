@@ -17,23 +17,13 @@
  * modCAM. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <pybind11/eigen.h>
-#include <pybind11/pybind11.h>
+#ifndef MODULUS_H
+#define MODULUS_H
 
-#include "modcam/mesh/per_vertex_normals.h"
-#include "modcam/mesh/voronoi_area.h"
+namespace modcam::utility {
+// Modulo function for looping backward
+// For example, mod(-1, 3) == 2, whereas -1 % 3 == -1
+inline int mod(int k, int n) { return ((k %= n) < 0) ? k + n : k; }
+} // namespace modcam::utility
 
-namespace py = pybind11;
-
-void bind_mesh(py::module &m) {
-	m.def("voronoi_area_of", &modcam::mesh::voronoi_area_of,
-	      py::arg_v("vertices", "V-by-3 array of floats"),
-	      py::arg_v("faces", "F-by-3 array of ints"),
-	      "Compute the Voronoi cell areas for the triangles in a mesh. Returns "
-	      "F-by-3 array of floats.");
-	m.def("per_vertex_normals", &modcam::mesh::per_vertex_normals,
-	      py::arg_v("vertices", "V-by-3 array of floats"),
-	      py::arg_v("faces", "F-by-3 array of ints"),
-	      "Compute the normal vector at each vertex in a triangle mesh. "
-	      "Returns V-by-3 array of floats.");
-}
+#endif

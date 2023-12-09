@@ -17,23 +17,18 @@
  * modCAM. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <pybind11/eigen.h>
-#include <pybind11/pybind11.h>
+#include "modcam/mesh/per_vertex_basis.h"
+#include <doctest/doctest.h>
 
-#include "modcam/mesh/per_vertex_normals.h"
-#include "modcam/mesh/voronoi_area.h"
+#include <cmath>
 
-namespace py = pybind11;
-
-void bind_mesh(py::module &m) {
-	m.def("voronoi_area_of", &modcam::mesh::voronoi_area_of,
-	      py::arg_v("vertices", "V-by-3 array of floats"),
-	      py::arg_v("faces", "F-by-3 array of ints"),
-	      "Compute the Voronoi cell areas for the triangles in a mesh. Returns "
-	      "F-by-3 array of floats.");
-	m.def("per_vertex_normals", &modcam::mesh::per_vertex_normals,
-	      py::arg_v("vertices", "V-by-3 array of floats"),
-	      py::arg_v("faces", "F-by-3 array of ints"),
-	      "Compute the normal vector at each vertex in a triangle mesh. "
-	      "Returns V-by-3 array of floats.");
+namespace modcam {
+TEST_CASE("Test per-vertex basis function") {
+	SUBCASE("Equilateral triangle") {
+		const Eigen::MatrixX3d vertices{
+			{0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}, {0.5, std::sqrt(3.0) / 2.0, 0.0}};
+		const Eigen::MatrixX3i faces{{0, 1, 2}};
+		mesh::per_vertex_basis(vertices, faces);
+	}
 }
+} // namespace modcam
