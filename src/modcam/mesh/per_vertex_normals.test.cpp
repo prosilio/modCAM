@@ -38,13 +38,13 @@ TEST_CASE("Test per-vertex normals function") {
 	                       {4, 11, 1}, {11, 10, 1}, {11, 2, 10}, {5, 2, 11},
 	                       {1, 10, 7}, {0, 1, 7}};
 	Eigen::MatrixX3d vertex_normals = mesh::per_vertex_normals(vertices, faces);
-	SUBCASE("Partial icosahedron") {
-		CHECK(vertex_normals.rows() == vertices.rows());
-		CHECK(vertex_normals.cols() == vertices.cols());
-		CHECK((vertex_normals.row(4).array() == vertices.row(4).array()).all());
-		CHECK(
-			(vertex_normals.row(11).array() == vertices.row(11).array()).all());
-		CHECK((vertex_normals.row(1).array() == vertices.row(1).array()).all());
-	}
+	CHECK(vertex_normals.rows() == vertices.rows());
+	CHECK(vertex_normals.cols() == vertices.cols());
+	CHECK((vertex_normals.row(4).array() == vertices.row(4).array()).all());
+	CHECK((vertex_normals.row(11).array() == vertices.row(11).array()).all());
+	CHECK((vertex_normals.row(1).array() == vertices.row(1).array()).all());
+	CHECK(vertex_normals.row(3).array().isNaN().all());
+	CHECK(vertex_normals.row(6).array().isNaN().all());
+	CHECK(vertex_normals.row(9).array().isNaN().all());
 }
 } // namespace modcam
