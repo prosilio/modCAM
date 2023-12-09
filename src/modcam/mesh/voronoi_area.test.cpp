@@ -51,6 +51,8 @@ TEST_CASE("Test Voronoi area function") {
 		                                {0.5, 0.1, 0.0}};
 		const Eigen::MatrixX3i faces{{0, 1, 2}, {0, 1, 3}};
 		Eigen::MatrixX3d weights = mesh::voronoi_area_of(vertices, faces);
+		CHECK(weights.rows() == faces.rows());
+		CHECK(weights.cols() == 3);
 		CHECK(weights(0, 0) == doctest::Approx(0.14433757));
 		CHECK(weights(0, 1) == doctest::Approx(0.14433757));
 		CHECK(weights(0, 2) == doctest::Approx(0.14433757));
