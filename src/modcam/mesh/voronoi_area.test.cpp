@@ -111,7 +111,7 @@ TEST_CASE("Test Voronoi area function") {
 	}
 
 	SUBCASE("2D vertex array") {
-		const Eigen::MatrixX3d vertices{{0.0, 0.0}, {1.0, 0.0}, {0.5, 0.1}};
+		const Eigen::MatrixXd vertices{{0.0, 0.0}, {1.0, 0.0}, {0.5, 0.1}};
 		const Eigen::MatrixX3i faces{{0, 1, 2}};
 		Eigen::MatrixX3d weights = mesh::voronoi_area(vertices, faces);
 		CHECK(weights(0) == 0.0125);

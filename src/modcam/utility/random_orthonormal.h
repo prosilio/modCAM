@@ -17,23 +17,14 @@
  * modCAM. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PER_VERTEX_BASIS_H
-#define PER_VERTEX_BASIS_H
+#ifndef RANDOM_ORTHONORMAL_H
+#define RANDOM_ORTHONORMAL_H
 
 #include <Eigen/Core>
 
-#include <tuple>
-
-namespace modcam::mesh {
-
-/**
- * Compute an orthonormal set of basis vectors where the z-axis is the vertex
- * normal.
- */
-
-std::tuple<Eigen::MatrixX3d, Eigen::MatrixX3d, Eigen::MatrixX3d>
-per_vertex_basis(const Eigen::MatrixX3d &vertex_normals);
-
-} // namespace modcam::mesh
+namespace modcam::utility {
+// Create a random normalized 3D vector orthogonal to the input vector.
+Eigen::RowVector3d random_orthonormal(const Eigen::RowVector3d &vector);
+} // namespace modcam::utility
 
 #endif

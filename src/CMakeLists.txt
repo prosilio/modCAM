@@ -20,7 +20,7 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 include(libigl)
 igl_include(core)
 
-add_library(modcam_objlib OBJECT "${MODCAM_SRC}" "${MODCAM_HEADERS}")
+add_library(modcam_objlib OBJECT "${MODCAM_SRC}" "${MODCAM_HEADERS}" "${UTILITY_SRC}" "${UTILITY_HEADERS}")
 target_link_libraries(
 	modcam_objlib
 	PUBLIC

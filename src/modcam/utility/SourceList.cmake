@@ -18,9 +18,11 @@
 set(UTILITY_SRC_DIR "${MODCAM_SRC_DIR}/utility")
 set(
 	UTILITY_SRC
+	"${UTILITY_SRC_DIR}/random_orthonormal.cpp"
 )
 
 set(
 	UTILITY_HEADERS
 	"${UTILITY_SRC_DIR}/modulus.h"
+	"${UTILITY_SRC_DIR}/random_orthonormal.h"
 )
