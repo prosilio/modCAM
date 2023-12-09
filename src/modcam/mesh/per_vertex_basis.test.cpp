@@ -74,9 +74,13 @@ TEST_CASE("Test per-vertex basis function") {
 		CHECK((b2.array() == normal_vectors.rowwise().normalized().array())
 		          .all());
 		Eigen::MatrixX3d b0_b1 = b0.row(0).cross(b1.row(0));
+		CHECK(b0_b1(0, 0) == doctest::Approx(b2(0, 0)));
+		CHECK(b0_b1(0, 1) == doctest::Approx(b2(0, 1)));
+		CHECK(b0_b1(0, 2) == doctest::Approx(b2(0, 2)));
 		Eigen::MatrixX3d b1_b2 = b1.row(0).cross(b2.row(0));
-		CHECK((b0.row(0).cross(b1.row(0)).array() == b2.row(0).array()).all());
-		CHECK((b1.row(0).cross(b2.row(0)).array() == b0.row(0).array()).all());
+		CHECK(b1_b2(0, 0) == doctest::Approx(b0(0, 0)));
+		CHECK(b1_b2(0, 1) == doctest::Approx(b0(0, 1)));
+		CHECK(b1_b2(0, 2) == doctest::Approx(b0(0, 2)));
 	}
 }
 } // namespace modcam

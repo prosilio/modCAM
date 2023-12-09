@@ -34,6 +34,7 @@ Eigen::RowVector3d random_orthonormal(const Eigen::RowVector3d &vector) {
 		perturb_vec(0) += perturbation;
 	}
 	Eigen::RowVector3d random_ortho_vector = vector.cross(perturb_vec);
+	random_ortho_vector.rowwise().normalize();
 	return random_ortho_vector;
 }
 } // namespace modcam::utility
