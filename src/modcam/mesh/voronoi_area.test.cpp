@@ -18,6 +18,8 @@
  */
 
 #include "modcam/mesh/voronoi_area.h"
+
+#include <Eigen/Core>
 #include <doctest/doctest.h>
 
 #include <cmath>
