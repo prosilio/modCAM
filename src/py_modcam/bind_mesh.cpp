@@ -20,6 +20,7 @@
 #include <pybind11/eigen.h>
 #include <pybind11/pybind11.h>
 
+#include "modcam/mesh/per_vertex_basis.h"
 #include "modcam/mesh/per_vertex_normals.h"
 #include "modcam/mesh/voronoi_area.h"
 
@@ -36,4 +37,8 @@ void bind_mesh(py::module &m) {
 	      py::arg_v("faces", "F-by-3 array of ints"),
 	      "Compute the normal vector at each vertex in a triangle mesh. "
 	      "Returns V-by-3 array of floats.");
+	m.def("per_vertex_basis", &modcam::mesh::per_vertex_basis,
+	      py::arg_v("vertex_normals", "V-by-3 array of floats"),
+	      "Compute an orthonormal set of basis vectors where the z-axis is the "
+	      "vertex normal. Returns a tuple of three V-by-3 arrays of floats.");
 }

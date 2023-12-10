@@ -24,6 +24,8 @@
 #include <Eigen/Geometry>
 #include <igl/edge_lengths.h>
 
+#include <limits>
+
 namespace modcam::mesh {
 Eigen::MatrixXd per_vertex_normals(const Eigen::MatrixXd &vertices,
                                    const Eigen::MatrixXi &faces) {
@@ -42,6 +44,8 @@ Eigen::MatrixXd per_vertex_normals(const Eigen::MatrixXd &vertices,
 	int num_vertices = vertices.rows();
 	int vertex_dim = vertices.cols();
 	Eigen::MatrixXd normals(num_vertices, vertex_dim);
+	normals.Constant(num_vertices, vertex_dim,
+	                 std::numeric_limits<double>::quiet_NaN());
 	int num_faces = faces.rows();
 	for (int row = 0; row < num_faces; row++) {
 		for (int col = 0; col < vertices_per_face; col++) {

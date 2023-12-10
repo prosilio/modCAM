@@ -18,6 +18,8 @@
  */
 
 #include "modcam/mesh/per_vertex_basis.h"
+
+#include <Eigen/Geometry>
 #include <doctest/doctest.h>
 
 #include <cmath>
