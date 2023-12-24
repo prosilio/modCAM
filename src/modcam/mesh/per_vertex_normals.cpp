@@ -43,9 +43,7 @@ Eigen::MatrixXd per_vertex_normals(const Eigen::MatrixXd &vertices,
 
 	int num_vertices = vertices.rows();
 	int vertex_dim = vertices.cols();
-	Eigen::MatrixXd normals(num_vertices, vertex_dim);
-	normals.Constant(num_vertices, vertex_dim,
-	                 std::numeric_limits<double>::quiet_NaN());
+	Eigen::MatrixXd normals = Eigen::MatrixXd::Zero(num_vertices, vertex_dim);
 	int num_faces = faces.rows();
 	for (int row = 0; row < num_faces; row++) {
 		for (int col = 0; col < vertices_per_face; col++) {
@@ -58,6 +56,12 @@ Eigen::MatrixXd per_vertex_normals(const Eigen::MatrixXd &vertices,
 			normals.row(faces(row, col)) +=
 				edge_i.cross(edge_j) /
 				(edge_squared(row, i) * edge_squared(row, j));
+		}
+	}
+	for (int row = 0; row < num_vertices; row++) {
+		if (normals.row(row).isZero()) {
+			normals.row(row) = Eigen::RowVector3d::Constant(
+				std::numeric_limits<double>::quiet_NaN());
 		}
 	}
 	normals.rowwise().normalize();
