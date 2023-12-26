@@ -30,6 +30,10 @@ namespace modcam::mesh {
 Eigen::MatrixXd per_vertex_normals(const Eigen::MatrixXd &vertices,
                                    const Eigen::MatrixXi &faces) {
 
+	if (faces.size() == 0 || vertices.size() == 0) {
+		return Eigen::MatrixXd(0, 0);
+	}
+
 	int vertices_per_face = faces.cols();
 	if (vertices_per_face != 3) {
 		throw std::invalid_argument(
@@ -37,12 +41,16 @@ Eigen::MatrixXd per_vertex_normals(const Eigen::MatrixXd &vertices,
 			"should have three columns.");
 	}
 
+	int vertex_dim = vertices.cols();
+	if (vertex_dim != 3) {
+		throw std::invalid_argument("Vertices must be 3-dimensional.");
+	}
+
 	Eigen::MatrixXd edge_squared;
 	igl::edge_lengths(vertices, faces, edge_squared);
 	edge_squared = edge_squared.cwiseProduct(edge_squared);
 
 	int num_vertices = vertices.rows();
-	int vertex_dim = vertices.cols();
 	Eigen::MatrixXd normals = Eigen::MatrixXd::Zero(num_vertices, vertex_dim);
 	int num_faces = faces.rows();
 	for (int row = 0; row < num_faces; row++) {
