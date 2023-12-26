@@ -51,7 +51,6 @@ TEST_CASE("Test per-vertex normals function") {
 		CHECK(vertex_normals.row(6).array().isNaN().all());
 		CHECK(vertex_normals.row(9).array().isNaN().all());
 	}
-
 	SUBCASE("Empty face array") {
 		double phi = (1.0 + std::sqrt(5.0)) / 2.0;
 		Eigen::MatrixX3d vertices{
@@ -64,7 +63,6 @@ TEST_CASE("Test per-vertex normals function") {
 			mesh::per_vertex_normals(vertices, faces);
 		CHECK(vertex_normals.size() == 0);
 	}
-
 	SUBCASE("Empty vertex array") {
 		const Eigen::MatrixXd vertices(0, 0);
 		Eigen::MatrixX3i faces{{0, 1, 2}, {0, 2, 3}, {0, 3, 4},
@@ -73,7 +71,6 @@ TEST_CASE("Test per-vertex normals function") {
 			mesh::per_vertex_normals(vertices, faces);
 		CHECK(vertex_normals.size() == 0);
 	}
-
 	SUBCASE("2D vertex array") {
 		Eigen::MatrixXd vertices{{0.0, 0.0},
 		                         {1.0, 0.0},
@@ -87,7 +84,6 @@ TEST_CASE("Test per-vertex normals function") {
 		CHECK_THROWS_AS(mesh::per_vertex_normals(vertices, faces),
 		                std::invalid_argument);
 	}
-
 	SUBCASE("Improperly sized face array") {
 		double phi = (1.0 + std::sqrt(5.0)) / 2.0;
 		Eigen::MatrixX3d vertices{
