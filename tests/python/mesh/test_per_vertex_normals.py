@@ -59,3 +59,8 @@ def test_shape(partial_icosahedron, vertex_normals, dim):
 def test_normals(partial_icosahedron, vertex_normals, row):
     vertices = partial_icosahedron[0]
     assert vertex_normals[row, :] == pytest.approx(vertices[row, :])
+
+
+@pytest.mark.parametrize("row", [(3), (6), (9)])
+def test_normals(vertex_normals, row):
+    assert np.isnan(vertex_normals[row, :]).all()
