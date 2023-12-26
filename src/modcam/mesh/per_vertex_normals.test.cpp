@@ -58,46 +58,18 @@ TEST_CASE("Test per-vertex normals function") {
 			{-phi, 1.0, 0.0},  {1.0, 0.0, phi},   {-1.0, 0.0, phi},
 			{-1.0, 0.0, -phi}, {1.0, 0.0, -phi},  {0.0, phi, 1.0},
 			{0.0, phi, -1.0},  {0.0, -phi, -1.0}, {0.0, -phi, 1.0}};
-		Eigen::MatrixXi faces(0, 0);
+		Eigen::MatrixX3i faces(0, 3);
 		Eigen::MatrixXd vertex_normals =
 			mesh::per_vertex_normals(vertices, faces);
 		CHECK(vertex_normals.size() == 0);
 	}
 	SUBCASE("Empty vertex array") {
-		const Eigen::MatrixXd vertices(0, 0);
+		const Eigen::MatrixX3d vertices(0, 3);
 		Eigen::MatrixX3i faces{{0, 1, 2}, {0, 2, 3}, {0, 3, 4},
 		                       {0, 4, 5}, {0, 5, 6}, {0, 6, 1}};
 		Eigen::MatrixXd vertex_normals =
 			mesh::per_vertex_normals(vertices, faces);
 		CHECK(vertex_normals.size() == 0);
-	}
-	SUBCASE("2D vertex array") {
-		Eigen::MatrixXd vertices{{0.0, 0.0},
-		                         {1.0, 0.0},
-		                         {0.5, std::sqrt(3.0) / 2.0},
-		                         {-0.5, std::sqrt(3.0) / 2.0},
-		                         {-1.0, 0.0},
-		                         {-0.5, -std::sqrt(3.0) / 2.0},
-		                         {0.5, -std::sqrt(3.0) / 2.0}};
-		Eigen::MatrixX3i faces{{0, 1, 2}, {0, 2, 3}, {0, 3, 4},
-		                       {0, 4, 5}, {0, 5, 6}, {0, 6, 1}};
-		CHECK_THROWS_AS(mesh::per_vertex_normals(vertices, faces),
-		                std::invalid_argument);
-	}
-	SUBCASE("Improperly sized face array") {
-		double phi = (1.0 + std::sqrt(5.0)) / 2.0;
-		Eigen::MatrixX3d vertices{
-			{phi, 1.0, 0.0},   {phi, -1.0, 0.0},  {-phi, -1.0, 0.0},
-			{-phi, 1.0, 0.0},  {1.0, 0.0, phi},   {-1.0, 0.0, phi},
-			{-1.0, 0.0, -phi}, {1.0, 0.0, -phi},  {0.0, phi, 1.0},
-			{0.0, phi, -1.0},  {0.0, -phi, -1.0}, {0.0, -phi, 1.0}};
-		vertices.rowwise()
-			.normalize(); // This will make it easier to compare calculated
-		                  // vertex normals to the "true" normals.
-		Eigen::MatrixXi faces{{5, 4},   {4, 5},  {8, 4}, {4, 1},  {4, 11},
-		                      {11, 10}, {11, 2}, {5, 2}, {1, 10}, {0, 1}};
-		CHECK_THROWS_AS(mesh::per_vertex_normals(vertices, faces),
-		                std::invalid_argument);
 	}
 }
 } // namespace modcam

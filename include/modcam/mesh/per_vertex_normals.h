@@ -29,8 +29,8 @@ namespace modcam::mesh {
  * described in @cite Max1999
  */
 
-Eigen::MatrixXd per_vertex_normals(const Eigen::MatrixXd &vertices,
-                                   const Eigen::MatrixXi &faces);
+Eigen::MatrixXd per_vertex_normals(const Eigen::MatrixX3d &vertices,
+                                   const Eigen::MatrixX3i &faces);
 
 } // namespace modcam::mesh
 
