@@ -49,11 +49,11 @@ Eigen::MatrixXd voronoi_area(const Eigen::MatrixXd &vertices,
 		return Eigen::MatrixXd::Zero(num_faces, 3);
 	}
 
-	Eigen::VectorXd area;
+	Eigen::ArrayXd area;
 	igl::doublearea(vertices, faces, area);
-	area.array() /= 2.0;
+	area /= 2.0;
 
-	Eigen::MatrixXd angles;
+	Eigen::ArrayXXd angles;
 	igl::internal_angles(vertices, faces, angles);
 
 	Eigen::MatrixXd half_cot;
@@ -65,7 +65,7 @@ Eigen::MatrixXd voronoi_area(const Eigen::MatrixXd &vertices,
 
 	double right_angle = std::numbers::pi / 2.0;
 	Eigen::Array<bool, Eigen::Dynamic, 1> nonobtuse =
-		(angles.array() <= right_angle).rowwise().all();
+		(angles <= right_angle).rowwise().all();
 
 	Eigen::MatrixXd v_area(num_faces, 3);
 
