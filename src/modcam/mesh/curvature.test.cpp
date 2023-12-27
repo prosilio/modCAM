@@ -77,7 +77,6 @@ TEST_CASE("Test curvature function") {
 		                       {10, 11, 9}, {11, 10, 0}, {0, 1, 11}};
 		mesh::Curvature curvature = mesh::curvature_rus2004(vertices, faces);
 		CHECK(curvature.size() == vertices.rows());
-		const double radius = 1.0;
 		for (int i = 0; i < vertices.cols(); i++) {
 			CHECK(curvature[i].first(0) == doctest::Approx(0.0));
 			CHECK(curvature[i].first(1) == doctest::Approx(1.0 / radius));
