@@ -59,7 +59,7 @@ TEST_CASE("Test per-vertex normals function") {
 			{-1.0, 0.0, -phi}, {1.0, 0.0, -phi},  {0.0, phi, 1.0},
 			{0.0, phi, -1.0},  {0.0, -phi, -1.0}, {0.0, -phi, 1.0}};
 		Eigen::MatrixX3i faces(0, 3);
-		Eigen::MatrixXd vertex_normals =
+		Eigen::MatrixX3d vertex_normals =
 			mesh::per_vertex_normals(vertices, faces);
 		CHECK(vertex_normals.size() == 0);
 	}
@@ -67,7 +67,7 @@ TEST_CASE("Test per-vertex normals function") {
 		const Eigen::MatrixX3d vertices(0, 3);
 		Eigen::MatrixX3i faces{{0, 1, 2}, {0, 2, 3}, {0, 3, 4},
 		                       {0, 4, 5}, {0, 5, 6}, {0, 6, 1}};
-		Eigen::MatrixXd vertex_normals =
+		Eigen::MatrixX3d vertex_normals =
 			mesh::per_vertex_normals(vertices, faces);
 		CHECK(vertex_normals.size() == 0);
 	}
