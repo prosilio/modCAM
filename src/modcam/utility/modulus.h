@@ -23,7 +23,7 @@
 namespace modcam::utility {
 // Modulo function for looping backward
 // For example, mod(-1, 3) == 2, whereas -1 % 3 == -1
-inline int mod(int k, int n) { return ((k %= n) < 0) ? k + n : k; }
+template <typename T> T mod(T k, T n) { return ((k %= n) < 0) ? k + n : k; }
 } // namespace modcam::utility
 
 #endif

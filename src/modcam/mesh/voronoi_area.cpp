@@ -37,14 +37,14 @@ Eigen::MatrixXd voronoi_area(const Eigen::MatrixXd &vertices,
 		return Eigen::MatrixXd(0, 0);
 	}
 
-	int vertices_per_face = faces.cols();
+	Eigen::Index vertices_per_face = faces.cols();
 	if (vertices_per_face != 3) {
 		throw std::invalid_argument(
 			"There should be three vertices per face, i.e. the faces array "
 			"should have three columns.");
 	}
 
-	int num_faces = faces.rows();
+	Eigen::Index num_faces = faces.rows();
 	if (vertices.size() == 0) {
 		return Eigen::MatrixXd::Zero(num_faces, 3);
 	}
@@ -69,11 +69,11 @@ Eigen::MatrixXd voronoi_area(const Eigen::MatrixXd &vertices,
 
 	Eigen::MatrixXd v_area(num_faces, 3);
 
-	for (int row = 0; row < num_faces; row++) {
-		for (int col = 0; col < vertices_per_face; col++) {
+	for (Eigen::Index row = 0; row < num_faces; row++) {
+		for (Eigen::Index col = 0; col < vertices_per_face; col++) {
 			if (nonobtuse(row)) {
-				int i = utility::mod(col - 1, vertices_per_face);
-				int j = utility::mod(col + 1, vertices_per_face);
+				Eigen::Index i = utility::mod(col - 1, vertices_per_face);
+				Eigen::Index j = utility::mod(col + 1, vertices_per_face);
 				v_area(row, col) =
 					0.25 * (edge_squared(row, i) * half_cot(row, i) +
 				            edge_squared(row, j) * half_cot(row, j));

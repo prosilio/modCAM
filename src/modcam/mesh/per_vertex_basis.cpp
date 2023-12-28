@@ -32,11 +32,11 @@ per_vertex_basis(const Eigen::MatrixX3d &vertex_normals) {
 	auto &b2 = std::get<2>(basis);
 
 	b2 = vertex_normals.rowwise().normalized();
-	int num_vectors = b2.rows();
-	int dim = b2.cols();
+	Eigen::Index num_vectors = b2.rows();
+	Eigen::Index dim = b2.cols();
 	b0.resize(num_vectors, dim);
 	b1.resize(num_vectors, dim);
-	for (int row = 0; row < num_vectors; row++) {
+	for (Eigen::Index row = 0; row < num_vectors; row++) {
 		b0.row(row) = utility::random_orthonormal(b2.row(row));
 		b1.row(row) = b2.row(row).cross(b0.row(row));
 	}

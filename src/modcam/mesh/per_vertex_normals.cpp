@@ -27,26 +27,26 @@
 #include <limits>
 
 namespace modcam::mesh {
-Eigen::MatrixXd per_vertex_normals(const Eigen::MatrixX3d &vertices,
-                                   const Eigen::MatrixX3i &faces) {
+Eigen::MatrixX3d per_vertex_normals(const Eigen::MatrixX3d &vertices,
+                                    const Eigen::MatrixX3i &faces) {
 
 	if (faces.size() == 0 || vertices.size() == 0) {
-		return Eigen::MatrixXd(0, 0);
+		return Eigen::MatrixX3d(0, 3);
 	}
 
 	Eigen::MatrixXd edge_squared;
 	igl::edge_lengths(vertices, faces, edge_squared);
 	edge_squared = edge_squared.cwiseProduct(edge_squared);
 
-	int num_vertices = vertices.rows();
-	int vertex_dim = vertices.cols();
-	Eigen::MatrixXd normals = Eigen::MatrixXd::Zero(num_vertices, vertex_dim);
-	int num_faces = faces.rows();
-	int vertices_per_face = faces.cols();
-	for (int row = 0; row < num_faces; row++) {
-		for (int col = 0; col < vertices_per_face; col++) {
-			int i = utility::mod(col - 1, vertices_per_face);
-			int j = utility::mod(col + 1, vertices_per_face);
+	Eigen::Index num_vertices = vertices.rows();
+	Eigen::Index vertex_dim = vertices.cols();
+	Eigen::MatrixX3d normals = Eigen::MatrixX3d::Zero(num_vertices, vertex_dim);
+	Eigen::Index num_faces = faces.rows();
+	Eigen::Index vertices_per_face = faces.cols();
+	for (Eigen::Index row = 0; row < num_faces; row++) {
+		for (Eigen::Index col = 0; col < vertices_per_face; col++) {
+			Eigen::Index i = utility::mod(col - 1, vertices_per_face);
+			Eigen::Index j = utility::mod(col + 1, vertices_per_face);
 			Eigen::RowVector3d edge_i = vertices.row(faces(row, j)).array() -
 			                            vertices.row(faces(row, col)).array();
 			Eigen::RowVector3d edge_j = vertices.row(faces(row, i)).array() -
@@ -56,7 +56,7 @@ Eigen::MatrixXd per_vertex_normals(const Eigen::MatrixX3d &vertices,
 				(edge_squared(row, i) * edge_squared(row, j));
 		}
 	}
-	for (int row = 0; row < num_vertices; row++) {
+	for (Eigen::Index row = 0; row < num_vertices; row++) {
 		if (normals.row(row).isZero()) {
 			normals.row(row) = Eigen::RowVector3d::Constant(
 				std::numeric_limits<double>::quiet_NaN());
