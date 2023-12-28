@@ -25,7 +25,10 @@
 
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
+#include <Eigen/Geometry>
 #include <igl/local_basis.h>
+
+#include <cmath>
 
 namespace modcam::mesh {
 Curvature curvature_rus2004(const Eigen::MatrixX3d &vertices,
@@ -77,20 +80,84 @@ Curvature curvature_rus2004(const Eigen::MatrixX3d &vertices,
 				.transpose();
 	}
 
-	Eigen::Index num_vertices = vertices.rows();
-	Eigen::MatrixX3d weights = voronoi_area(vertices, faces);
-	Eigen::VectorXd sum_weights(num_vertices);
-	Eigen::MatrixXd second_fundamental_vb(num_vertices, vertices.cols());
-	for (Eigen::Index row = 0; row < num_vertices; row++) {
-		for (Eigen::Index col = 0; col < 3; col++) {
+	std::tuple<Eigen::MatrixX3d, Eigen::MatrixX3d, Eigen::MatrixX3d>
+		vertex_basis = mesh::per_vertex_basis(vertex_normals);
+	auto &vertex_basis0 = std::get<0>(vertex_basis);
+	auto &vertex_basis1 = std::get<1>(vertex_basis);
+	auto &vertex_basis2 = std::get<2>(vertex_basis);
+
+	// Rotate the face basis to align its z-axis with the vertex basis z-axis.
+	for (Eigen::Index row = 0; row < num_faces; row++) {
+		for (Eigen::Index col = 0; col < faces.cols(); col++) {
 			int v_idx = faces(row, col);
+			double cos_angle =
+				face_basis2.row(row).dot(vertex_basis2.row(v_idx));
+			double angle = std::acos(cos_angle);
+			constexpr double eps = 1.0e-6;
+			if (angle < eps) {
+				continue;
+			}
+			Eigen::RowVector3d rotation_axis =
+				(face_basis2.row(row).cross(vertex_basis2.row(v_idx)))
+					.normalized();
+			Eigen::RowVector3d fb0 = face_basis0.row(row);
+			face_basis0.row(row) =
+				fb0 * cos_angle + rotation_axis.cross(fb0) * std::sin(angle) +
+				rotation_axis * rotation_axis.dot(fb0) * (1 - cos_angle);
+			Eigen::RowVector3d fb1 = face_basis1.row(row);
+			face_basis1.row(row) =
+				fb1 * cos_angle + rotation_axis.cross(fb1) * std::sin(angle) +
+				rotation_axis * rotation_axis.dot(fb1) * (1 - cos_angle);
 		}
 	}
 
-	std::tuple<Eigen::MatrixX3d, Eigen::MatrixX3d, Eigen::MatrixX3d>
-		vertex_basis = mesh::per_vertex_basis(vertex_normals);
-	auto &vertex_b0 = std::get<0>(vertex_basis);
-	auto &vertex_b1 = std::get<1>(vertex_basis);
-	auto &vertex_b2 = std::get<2>(vertex_basis);
+	// Compute the second fundamental form in the vertex basis frame.
+	Eigen::MatrixX3d weights = voronoi_area(vertices, faces);
+	Eigen::Index num_vertices = vertices.rows();
+	Eigen::ArrayXd sum_weights{Eigen::ArrayXd::Zero(num_vertices)};
+	Eigen::MatrixXd second_fundamental_vb{
+		Eigen::MatrixXd::Zero(num_vertices, vertices.cols())};
+	for (Eigen::Index row = 0; row < num_faces; row++) {
+		for (Eigen::Index col = 0; col < 3; col++) {
+			int v_idx = faces(row, col);
+			double vb0_fb0 = vertex_basis0.row(v_idx).dot(face_basis0.row(row));
+			double vb0_fb1 = vertex_basis0.row(v_idx).dot(face_basis1.row(row));
+			double vb1_fb0 = vertex_basis1.row(v_idx).dot(face_basis0.row(row));
+			double vb1_fb1 = vertex_basis1.row(v_idx).dot(face_basis1.row(row));
+
+			double a = second_fundamental_fb(row, 0) * vb0_fb0 * vb0_fb0 +
+			           second_fundamental_fb(row, 1) * 2.0 * vb0_fb0 * vb0_fb1 +
+			           second_fundamental_fb(row, 2) * vb0_fb1 * vb0_fb1;
+			double b = second_fundamental_fb(row, 0) * vb0_fb0 * vb1_fb0 +
+			           second_fundamental_fb(row, 1) * vb0_fb0 * vb1_fb1 +
+			           second_fundamental_fb(row, 1) * vb0_fb1 * vb1_fb0 +
+			           second_fundamental_fb(row, 2) * vb0_fb1 * vb1_fb1;
+			double c = second_fundamental_fb(row, 0) * vb1_fb0 * vb1_fb0 +
+			           second_fundamental_fb(row, 1) * vb1_fb0 * vb1_fb1 +
+			           second_fundamental_fb(row, 2) * vb1_fb1 * vb1_fb1;
+			double weight = weights(row, col);
+			second_fundamental_vb(v_idx, 0) += weight * a;
+			second_fundamental_vb(v_idx, 1) += weight * b;
+			second_fundamental_vb(v_idx, 2) += weight * c;
+			sum_weights(v_idx) += weight;
+		}
+	}
+
+	// Compute per-vertex principal curvature from the second fundamental form.
+	Curvature principal_curvature;
+	principal_curvature.reserve(num_vertices);
+	Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d> es;
+	for (Eigen::Index row = 0; row < num_vertices; row++) {
+		double a = second_fundamental_vb(row, 0) / sum_weights(row);
+		double b = second_fundamental_vb(row, 1) / sum_weights(row);
+		double c = second_fundamental_vb(row, 2) / sum_weights(row);
+		es.compute(Eigen::Matrix2d{{a, b}, {b, c}});
+		std::pair<Eigen::Vector2d, Eigen::Matrix2d> eig;
+		eig.first = es.eigenvalues();
+		eig.second = es.eigenvectors();
+		principal_curvature.push_back(eig);
+	}
+
+	return principal_curvature;
 }
 } // namespace modcam::mesh

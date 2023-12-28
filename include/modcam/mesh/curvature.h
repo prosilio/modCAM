@@ -30,8 +30,8 @@ namespace modcam::mesh {
 using Curvature = std::vector<std::pair<Eigen::Vector2d, Eigen::Matrix2d>>;
 
 /**
- * Compute the (vertex) curvature using the algorithm described in @cite
- * Rusinkiewicz2004.
+ * Compute the (vertex) principal curvature using the algorithm described in
+ * @cite Rusinkiewicz2004.
  */
 Curvature curvature_rus2004(const Eigen::MatrixX3d &vertices,
                             const Eigen::MatrixX3i &faces);
