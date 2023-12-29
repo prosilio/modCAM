@@ -22,19 +22,20 @@
 
 #include <Eigen/Core>
 
-#include <utility>
+#include <tuple>
 #include <vector>
 
 namespace modcam::mesh {
 
-using Curvature = std::vector<std::pair<Eigen::Vector2d, Eigen::Matrix2d>>;
+using Curvature = std::tuple<Eigen::VectorXd, Eigen::VectorXd, Eigen::MatrixXd,
+                             Eigen::MatrixXd>;
 
 /**
  * Compute the (vertex) principal curvature using the algorithm described in
  * @cite Rusinkiewicz2004.
  */
-Curvature curvature_rus2004(const Eigen::MatrixX3d &vertices,
-                            const Eigen::MatrixX3i &faces);
+Curvature principal_curvature_rus2004(const Eigen::MatrixX3d &vertices,
+                                      const Eigen::MatrixX3i &faces);
 
 } // namespace modcam::mesh
 

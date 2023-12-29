@@ -17,7 +17,7 @@
  * modCAM. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "modcam/mesh/curvature.h"
+#include "modcam/mesh/principal_curvature.h"
 
 #include "modcam/mesh/per_vertex_basis.h"
 #include "modcam/mesh/per_vertex_normals.h"
@@ -27,12 +27,13 @@
 #include <Eigen/Eigenvalues>
 #include <Eigen/Geometry>
 #include <igl/local_basis.h>
+#include <igl/principal_curvature.h>
 
 #include <cmath>
 
 namespace modcam::mesh {
-Curvature curvature_rus2004(const Eigen::MatrixX3d &vertices,
-                            const Eigen::MatrixX3i &faces) {
+Curvature principal_curvature_rus2004(const Eigen::MatrixX3d &vertices,
+                                      const Eigen::MatrixX3i &faces) {
 	Eigen::MatrixX3d edge0 = vertices(faces.col(2).array(), Eigen::all) -
 	                         vertices(faces.col(1).array(), Eigen::all);
 	Eigen::MatrixX3d edge1 = vertices(faces.col(0).array(), Eigen::all) -
@@ -145,17 +146,26 @@ Curvature curvature_rus2004(const Eigen::MatrixX3d &vertices,
 
 	// Compute per-vertex principal curvature from the second fundamental form.
 	Curvature principal_curvature;
-	principal_curvature.reserve(num_vertices);
+	auto &pv1 = std::get<0>(principal_curvature);
+	pv1.resize(num_vertices, 1);
+	auto &pv2 = std::get<1>(principal_curvature);
+	pv2.resize(num_vertices, 1);
+	auto &pd1 = std::get<2>(principal_curvature);
+	pd1.resize(num_vertices, 2);
+	auto &pd2 = std::get<3>(principal_curvature);
+	pd2.resize(num_vertices, 2);
 	Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d> es;
 	for (Eigen::Index row = 0; row < num_vertices; row++) {
 		double a = second_fundamental_vb(row, 0) / sum_weights(row);
 		double b = second_fundamental_vb(row, 1) / sum_weights(row);
 		double c = second_fundamental_vb(row, 2) / sum_weights(row);
 		es.compute(Eigen::Matrix2d{{a, b}, {b, c}});
-		std::pair<Eigen::Vector2d, Eigen::Matrix2d> eig;
-		eig.first = es.eigenvalues();
-		eig.second = es.eigenvectors();
-		principal_curvature.push_back(eig);
+		Eigen::Vector2d eigval{es.eigenvalues()};
+		pv1(row) = eigval(0);
+		pv2(row) = eigval(1);
+		Eigen::Matrix2d eigvec{es.eigenvectors().transpose()};
+		pd1.row(row) = eigvec.row(0);
+		pd1.row(row) = eigvec.row(1);
 	}
 
 	return principal_curvature;

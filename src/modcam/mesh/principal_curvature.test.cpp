@@ -17,7 +17,7 @@
  * modCAM. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "modcam/mesh/curvature.h"
+#include "modcam/mesh/principal_curvature.h"
 
 #include <Eigen/Core>
 #include <doctest/doctest.h>
@@ -38,19 +38,30 @@ TEST_CASE("Test curvature function") {
 		Eigen::MatrixX3i faces{{5, 4, 8},  {4, 5, 11},  {8, 4, 0},   {4, 1, 0},
 		                       {4, 11, 1}, {11, 10, 1}, {11, 2, 10}, {5, 2, 11},
 		                       {1, 10, 7}, {0, 1, 7}};
-		mesh::Curvature curvature = mesh::curvature_rus2004(vertices, faces);
-		CHECK(curvature.size() == vertices.rows());
+		mesh::Curvature principal_curvature =
+			mesh::principal_curvature_rus2004(vertices, faces);
+		auto &pv1 = std::get<0>(principal_curvature);
+		auto &pv2 = std::get<1>(principal_curvature);
+		auto &pd1 = std::get<2>(principal_curvature);
+		auto &pd2 = std::get<3>(principal_curvature);
+		Eigen::Index num_vertices{vertices.rows()};
+		CHECK(pv1.rows() == num_vertices);
+		CHECK(pv1.cols() == 1);
+		CHECK(pv2.rows() == num_vertices);
+		CHECK(pv2.cols() == 1);
+		CHECK(pd1.rows() == num_vertices);
+		CHECK(pd1.cols() == 2);
+		CHECK(pd2.rows() == num_vertices);
+		CHECK(pd2.cols() == 2);
 		const double radius = 1.0;
 		int inner_vertices[3] = {1, 4, 11};
 		for (int i = 0; i < 3; i++) {
-			CHECK(curvature[inner_vertices[i]].first(0) ==
-			      doctest::Approx(1.0 / radius));
-			CHECK(curvature[inner_vertices[i]].first(1) ==
-			      doctest::Approx(1.0 / radius));
+			CHECK(pv1(inner_vertices[i]) == doctest::Approx(1.0 / radius));
+			CHECK(pv2(inner_vertices[i]) == doctest::Approx(1.0 / radius));
 		}
 		int excluded_vertices[3] = {3, 6, 9};
 		for (int i = 0; i < 3; i++) {
-			CHECK(curvature[excluded_vertices[i]].first.array().isNaN().all());
+			CHECK(pd1.row(excluded_vertices[i]).array().isNaN().all());
 		}
 	}
 	SUBCASE("Cylinder") {
@@ -75,11 +86,24 @@ TEST_CASE("Test curvature function") {
 		                       {4, 5, 3},   {5, 4, 6},   {6, 7, 5},
 		                       {7, 6, 8},   {8, 9, 7},   {9, 8, 10},
 		                       {10, 11, 9}, {11, 10, 0}, {0, 1, 11}};
-		mesh::Curvature curvature = mesh::curvature_rus2004(vertices, faces);
-		CHECK(curvature.size() == vertices.rows());
+		mesh::Curvature principal_curvature =
+			mesh::principal_curvature_rus2004(vertices, faces);
+		auto &pv1 = std::get<0>(principal_curvature);
+		auto &pv2 = std::get<1>(principal_curvature);
+		auto &pd1 = std::get<2>(principal_curvature);
+		auto &pd2 = std::get<3>(principal_curvature);
+		Eigen::Index num_vertices{vertices.rows()};
+		CHECK(pv1.rows() == num_vertices);
+		CHECK(pv1.cols() == 1);
+		CHECK(pv2.rows() == num_vertices);
+		CHECK(pv2.cols() == 1);
+		CHECK(pd1.rows() == num_vertices);
+		CHECK(pd1.cols() == 2);
+		CHECK(pd2.rows() == num_vertices);
+		CHECK(pd2.cols() == 2);
 		for (int i = 0; i < vertices.cols(); i++) {
-			CHECK(curvature[i].first(0) == doctest::Approx(0.0));
-			CHECK(curvature[i].first(1) == doctest::Approx(1.0 / radius));
+			CHECK(pv1(i) == doctest::Approx(0.0));
+			CHECK(pv2(i) == doctest::Approx(1.0 / radius));
 		}
 	}
 }
