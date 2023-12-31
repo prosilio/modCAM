@@ -31,9 +31,10 @@ TEST_CASE("Test Voronoi area function") {
 			{0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}, {0.5, std::sqrt(3.0) / 2.0, 0.0}};
 		const Eigen::MatrixX3i faces{{0, 1, 2}};
 		Eigen::MatrixX3d weights = mesh::voronoi_area(vertices, faces);
-		CHECK(weights(0) == doctest::Approx(0.14433757));
-		CHECK(weights(1) == doctest::Approx(0.14433757));
-		CHECK(weights(2) == doctest::Approx(0.14433757));
+		const double one_third_area = std::sqrt(3.0) / 12.0;
+		CHECK(weights(0) == doctest::Approx(one_third_area));
+		CHECK(weights(1) == doctest::Approx(one_third_area));
+		CHECK(weights(2) == doctest::Approx(one_third_area));
 	}
 	SUBCASE("Obtuse triangle") {
 		const Eigen::MatrixX3d vertices{
@@ -53,9 +54,10 @@ TEST_CASE("Test Voronoi area function") {
 		Eigen::MatrixX3d weights = mesh::voronoi_area(vertices, faces);
 		CHECK(weights.rows() == faces.rows());
 		CHECK(weights.cols() == 3);
-		CHECK(weights(0, 0) == doctest::Approx(0.14433757));
-		CHECK(weights(0, 1) == doctest::Approx(0.14433757));
-		CHECK(weights(0, 2) == doctest::Approx(0.14433757));
+		const double one_third_area = std::sqrt(3.0) / 12.0;
+		CHECK(weights(0, 0) == doctest::Approx(one_third_area));
+		CHECK(weights(0, 1) == doctest::Approx(one_third_area));
+		CHECK(weights(0, 2) == doctest::Approx(one_third_area));
 		CHECK(weights(1, 0) == 0.0125);
 		CHECK(weights(1, 1) == 0.0125);
 		CHECK(weights(1, 2) == 0.025);
