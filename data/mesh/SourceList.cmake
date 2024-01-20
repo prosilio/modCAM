@@ -1,4 +1,4 @@
-# Copyright 2023 prosilio
+# Copyright 2024 prosilio
 # 
 # This file is part of modCAM, open source software for Computer Aided
 # Manufacturing research.
@@ -15,34 +15,8 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-find_package(Eigen3 REQUIRED NO_MODULE)
-include(libigl)
-igl_include(core)
-
-add_executable(
-	test_modcam 
-	$<TARGET_OBJECTS:modcam_objlib> 
-	"${MODCAM_TEST_SRC}"
-	"${MODCAM_PROJECT_DIR}/tests/run_tests.cpp"
-)
-target_link_libraries(
-	test_modcam
-	PRIVATE
-		doctest
-		Eigen3::Eigen
-		igl::core
-		modcam::data
-)
-target_include_directories(
-	test_modcam
-	PUBLIC
-		$<BUILD_INTERFACE:${MODCAM_PROJECT_DIR}/include>
-		$<INSTALL_INTERFACE:include>
-	PRIVATE
-		${MODCAM_PROJECT_DIR}/src
-)
-set_target_properties(
-	test_modcam
-	PROPERTIES
-		RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
+set(MESH_DATA_DIR "${MODCAM_DATA_DIR}/mesh")
+set(
+	MESH_DATA
+	"${MESH_DATA_DIR}/sphere.stl"
 )

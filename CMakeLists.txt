@@ -49,6 +49,17 @@ if(MODCAM_BUILD_PYTHON)
 	add_subdirectory("${MODCAM_PROJECT_DIR}/external/pybind11")
 endif()
 
+# Resource files
+include(CMakeRC)
+include("data/SourceList.cmake")
+cmrc_add_resource_library(
+	modcam-data 
+	ALIAS modcam::data 
+	NAMESPACE modcam 
+	WHENCE "${MODCAM_PROJECT_DIR}"
+	${MODCAM_DATA}
+)
+
 # Project files
 include("src/modcam/SourceList.cmake")
 add_subdirectory(src)

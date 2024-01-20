@@ -23,7 +23,7 @@ import pytest
 
 @pytest.fixture
 def sphere_mesh():
-    sphere_file = "data/meshes/sphere.stl"
+    sphere_file = "data/mesh/sphere.stl"
     vertices, faces = igl.read_triangle_mesh(sphere_file)
     vertices, faces = igl.remove_duplicates(vertices, faces, 1.0e-7)
     for i in range(3):

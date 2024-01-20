@@ -20,21 +20,29 @@
 #include "modcam/mesh/principal_curvature.h"
 
 #include <Eigen/Core>
+#include <cmrc/cmrc.hpp>
 #include <doctest/doctest.h>
 #include <igl/readSTL.h>
 #include <igl/remove_duplicate_vertices.h>
 
 #include <cmath>
-#include <fstream>
+#include <cstddef>
 #include <numbers>
+#include <strstream>
+
+CMRC_DECLARE(modcam);
 
 namespace modcam {
 TEST_CASE("Test curvature function") {
 	SUBCASE("Sphere") {
-		std::ifstream sphere_stl(
-			"./data/meshes/sphere.stl",
-			std::ios::in | std::ios::binary); // TODO: Figure out how to compile
-		                                      // mesh file with tests
+		auto fs = cmrc::modcam::get_filesystem();
+		std::string sphere_path{"data/mesh/sphere.stl"};
+		REQUIRE(fs.is_file(sphere_path));
+		auto sphere_rc = fs.open(sphere_path);
+		std::istrstream sphere_stl(
+			sphere_rc.begin(),
+			sphere_rc.size()); // TODO: Change this to spanstream when I switch
+		                       // to C++23.
 		Eigen::MatrixX3d tmp_vertices;
 		Eigen::MatrixX3i tmp_faces;
 		Eigen::MatrixX3d tmp_normals;
