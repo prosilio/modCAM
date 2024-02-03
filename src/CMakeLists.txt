@@ -42,6 +42,11 @@ set_target_properties(modcam_objlib PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 if(MODCAM_BUILD_CPP)
 	add_library(modcam_cpp SHARED $<TARGET_OBJECTS:modcam_objlib>)
+	target_include_directories(
+		modcam_cpp
+		PUBLIC
+			$<TARGET_PROPERTY:modcam_objlib,INCLUDE_DIRECTORIES>
+	)
 	set_target_properties(
 		modcam_cpp
 		PROPERTIES
