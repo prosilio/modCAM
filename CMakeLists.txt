@@ -60,6 +60,11 @@ cmrc_add_resource_library(
 	${MODCAM_DATA}
 )
 
+# Dependencies
+find_package(Eigen3 REQUIRED NO_MODULE)
+include(libigl)
+igl_include(core)
+
 # Project files
 include("src/modcam/SourceList.cmake")
 add_subdirectory(src)

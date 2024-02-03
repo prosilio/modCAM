@@ -15,10 +15,6 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-find_package(Eigen3 REQUIRED NO_MODULE)
-include(libigl)
-igl_include(core)
-
 add_executable(
 	test_modcam 
 	$<TARGET_OBJECTS:modcam_objlib> 
