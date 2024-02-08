@@ -36,29 +36,9 @@ set(MODCAM_PROJECT_DIR "${PROJECT_SOURCE_DIR}")
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	set(CMAKE_CXX_STANDARD 20)
-	include(CTest)
 endif()
 
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
-# Build options
-option(MODCAM_BUILD_CPP "Build C++ shared library" ON)
-option(MODCAM_BUILD_PYTHON "Build Python bindings" ON)
-
-if(MODCAM_BUILD_PYTHON)
-	add_subdirectory("${MODCAM_PROJECT_DIR}/external/pybind11")
-endif()
-
-# Resource files
-include(CMakeRC)
-include("data/SourceList.cmake")
-cmrc_add_resource_library(
-	modcam-data 
-	ALIAS modcam::data 
-	NAMESPACE modcam 
-	WHENCE "${MODCAM_PROJECT_DIR}"
-	${MODCAM_DATA}
-)
 
 # Dependencies
 find_package(Eigen3 REQUIRED NO_MODULE)
@@ -72,6 +52,17 @@ add_subdirectory(src)
 # Tests
 option(MODCAM_BUILD_TESTS "Build tests" ON)
 if(MODCAM_BUILD_TESTS)
+	# Resource files
+	include(CMakeRC)
+	include("data/SourceList.cmake")
+	cmrc_add_resource_library(
+		modcam-data 
+		ALIAS modcam::data 
+		NAMESPACE modcam 
+		WHENCE "${MODCAM_PROJECT_DIR}"
+		${MODCAM_DATA}
+	)
+
 	add_subdirectory("${MODCAM_PROJECT_DIR}/external/doctest")
 	add_subdirectory(tests)
 endif()

@@ -17,13 +17,13 @@
 
 add_executable(
 	test_modcam 
-	$<TARGET_OBJECTS:modcam_objlib> 
 	"${MODCAM_TEST_SRC}"
 	"${MODCAM_PROJECT_DIR}/tests/run_tests.cpp"
 )
 target_link_libraries(
 	test_modcam
 	PRIVATE
+		${PROJECT_NAME}
 		doctest
 		Eigen3::Eigen
 		igl::core
