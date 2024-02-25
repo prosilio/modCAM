@@ -25,14 +25,14 @@ target_link_libraries(
 	PUBLIC
 		Eigen3::Eigen
 	PRIVATE
-		doctest
-		igl::core
+		igl::igl_core
 )
 target_include_directories(
 	${PROJECT_NAME} 
 	PUBLIC
 		$<BUILD_INTERFACE:${MODCAM_PROJECT_DIR}/include>
 		$<INSTALL_INTERFACE:include>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 	PRIVATE
 		${MODCAM_PROJECT_DIR}/src
 )
@@ -42,8 +42,20 @@ target_compile_options(
 		$<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
 		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
 )
-set_target_properties(
-	${PROJECT_NAME} 
-	PROPERTIES
-		LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
+
+generate_export_header(${PROJECT_NAME})
+
+install(
+	TARGETS ${PROJECT_NAME} 
+	EXPORT "${PROJECT_NAME}Targets"
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+	RUNTIME DESTINATION bin
+	INCLUDES DESTINATION include
+)
+install(
+	EXPORT "${PROJECT_NAME}Targets"
+	FILE "${PROJECT_NAME}Targets.cmake"
+	NAMESPACE ${PROJECT_NAME}::
+	DESTINATION lib/cmake/${PROJECT_NAME} 
 )

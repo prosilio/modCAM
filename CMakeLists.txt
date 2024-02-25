@@ -32,7 +32,11 @@ project(
 	LANGUAGES CXX
 )
 
-set(MODCAM_PROJECT_DIR "${PROJECT_SOURCE_DIR}")
+# Symbols are hidden by default so that we explicitly define which symbols to 
+# expose.
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+include(GenerateExportHeader)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	set(CMAKE_CXX_STANDARD 20)
@@ -40,10 +44,11 @@ endif()
 
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+set(MODCAM_PROJECT_DIR "${PROJECT_SOURCE_DIR}")
+
 # Dependencies
 find_package(Eigen3 REQUIRED NO_MODULE)
-include(libigl)
-igl_include(core)
+find_package(libigl REQUIRED)
 
 # Project files
 include("src/modcam/SourceList.cmake")
@@ -52,6 +57,8 @@ add_subdirectory(src)
 # Tests
 option(MODCAM_BUILD_TESTS "Build tests" ON)
 if(MODCAM_BUILD_TESTS)
+	find_package(doctest REQUIRED)
+	
 	# Resource files
 	include(CMakeRC)
 	include("data/SourceList.cmake")
@@ -63,7 +70,7 @@ if(MODCAM_BUILD_TESTS)
 		${MODCAM_DATA}
 	)
 
-	add_subdirectory("${MODCAM_PROJECT_DIR}/external/doctest")
+	# add_subdirectory("${MODCAM_PROJECT_DIR}/external/doctest")
 	add_subdirectory(tests)
 endif()
 

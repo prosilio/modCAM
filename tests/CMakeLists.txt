@@ -24,9 +24,9 @@ target_link_libraries(
 	test_modcam
 	PRIVATE
 		${PROJECT_NAME}
-		doctest
+		doctest::doctest
 		Eigen3::Eigen
-		igl::core
+		igl::igl_core
 		modcam::data
 )
 target_include_directories(

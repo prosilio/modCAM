@@ -20,6 +20,8 @@
 #ifndef PER_VERTEX_NORMALS_H
 #define PER_VERTEX_NORMALS_H
 
+#include "modcam_export.h"
+
 #include <Eigen/Core>
 
 namespace modcam::mesh {
@@ -29,8 +31,9 @@ namespace modcam::mesh {
  * described in @cite Max1999
  */
 
-Eigen::MatrixX3d per_vertex_normals(const Eigen::MatrixX3d &vertices,
-                                    const Eigen::MatrixX3i &faces);
+MODCAM_EXPORT Eigen::MatrixX3d
+per_vertex_normals(const Eigen::MatrixX3d &vertices,
+                   const Eigen::MatrixX3i &faces);
 
 } // namespace modcam::mesh
 
