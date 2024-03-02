@@ -17,19 +17,19 @@
 
 cmake_minimum_required(VERSION 3.21...3.27)
 if(${CMAKE_VERSION} VERSION_LESS 3.12)
-	cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+    cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
 
 # Require out-of-source builds
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
 if(EXISTS "${LOC_PATH}")
-	message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build directory. Feel free to remove CMakeCache.txt and CMakeFiles.")
+    message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build directory. Feel free to remove CMakeCache.txt and CMakeFiles.")
 endif()
 
 project(
-	modCAM
-	DESCRIPTION "Open source software for Computer Aided Manufacturing (CAM) research"
-	LANGUAGES CXX
+    modCAM
+    DESCRIPTION "Open source software for Computer Aided Manufacturing (CAM) research"
+    LANGUAGES CXX
 )
 
 # Symbols are hidden by default so that we explicitly define which symbols to 
@@ -39,7 +39,7 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
 include(GenerateExportHeader)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-	set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD 20)
 endif()
 
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -59,21 +59,21 @@ add_subdirectory(src)
 # Tests
 option(MODCAM_BUILD_TESTS "Build tests" ON)
 if(MODCAM_BUILD_TESTS)
-	find_package(doctest REQUIRED)
-	
-	# Resource files
-	include(CMakeRC)
-	include("data/SourceList.cmake")
-	cmrc_add_resource_library(
-		modcam-data 
-		ALIAS modcam::data 
-		NAMESPACE modcam 
-		WHENCE "${MODCAM_PROJECT_DIR}"
-		${MODCAM_DATA}
-	)
+    find_package(doctest REQUIRED)
+    
+    # Resource files
+    include(CMakeRC)
+    include("data/SourceList.cmake")
+    cmrc_add_resource_library(
+        modcam-data 
+        ALIAS modcam::data 
+        NAMESPACE modcam 
+        WHENCE "${MODCAM_PROJECT_DIR}"
+        ${MODCAM_DATA}
+    )
 
-	# add_subdirectory("${MODCAM_PROJECT_DIR}/external/doctest")
-	add_subdirectory(tests)
+    # add_subdirectory("${MODCAM_PROJECT_DIR}/external/doctest")
+    add_subdirectory(tests)
 endif()
 
 # Documentation
@@ -82,5 +82,5 @@ endif()
 option(BUILD_DOC "Build documentation" ON)
 if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODCAM_BUILD_DOC)
    AND BUILD_DOC)
-	add_subdirectory(docs)
+    add_subdirectory(docs)
 endif()

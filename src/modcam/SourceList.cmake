@@ -22,16 +22,16 @@ include("${MODCAM_SRC_DIR}/mesh/SourceList.cmake")
 include("${MODCAM_SRC_DIR}/utility/SourceList.cmake")
 
 set(
-	MODCAM_SRC
-	"${MESH_SRC}"
+    MODCAM_SRC
+    "${MESH_SRC}"
 )
 
 set(
-	MODCAM_HEADERS
-	"${MESH_HEADERS}"
+    MODCAM_HEADERS
+    "${MESH_HEADERS}"
 )
 
 set(
-	MODCAM_TEST_SRC
-	"${MESH_TEST_SRC}"
+    MODCAM_TEST_SRC
+    "${MESH_TEST_SRC}"
 )

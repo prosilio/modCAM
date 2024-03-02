@@ -16,29 +16,29 @@
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
 add_executable(
-	test_modcam 
-	"${MODCAM_TEST_SRC}"
-	"${MODCAM_PROJECT_DIR}/tests/run_tests.cpp"
+    test_modcam 
+    "${MODCAM_TEST_SRC}"
+    "${MODCAM_PROJECT_DIR}/tests/run_tests.cpp"
 )
 target_link_libraries(
-	test_modcam
-	PRIVATE
-		${PROJECT_NAME}
-		doctest::doctest
-		Eigen3::Eigen
-		igl::igl_core
-		modcam::data
+    test_modcam
+    PRIVATE
+        ${PROJECT_NAME}
+        doctest::doctest
+        Eigen3::Eigen
+        igl::igl_core
+        modcam::data
 )
 target_include_directories(
-	test_modcam
-	PUBLIC
-		$<BUILD_INTERFACE:${MODCAM_PROJECT_DIR}/include>
-		$<INSTALL_INTERFACE:include>
-	PRIVATE
-		${MODCAM_PROJECT_DIR}/src
+    test_modcam
+    PUBLIC
+        $<BUILD_INTERFACE:${MODCAM_PROJECT_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    PRIVATE
+        ${MODCAM_PROJECT_DIR}/src
 )
 set_target_properties(
-	test_modcam
-	PROPERTIES
-		RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
+    test_modcam
+    PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
 )

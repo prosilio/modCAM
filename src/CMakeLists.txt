@@ -16,51 +16,51 @@
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
 add_library(
-	${PROJECT_NAME} 
-	"${MODCAM_SRC}" "${MODCAM_HEADERS}" 
-	"${UTILITY_SRC}" "${UTILITY_HEADERS}"
+    ${PROJECT_NAME} 
+    "${MODCAM_SRC}" "${MODCAM_HEADERS}" 
+    "${UTILITY_SRC}" "${UTILITY_HEADERS}"
 )
 target_link_libraries(
-	${PROJECT_NAME} 
-	PUBLIC
-		Eigen3::Eigen
-	PRIVATE
-		igl::igl_core
+    ${PROJECT_NAME} 
+    PUBLIC
+        Eigen3::Eigen
+    PRIVATE
+        igl::igl_core
 )
 target_include_directories(
-	${PROJECT_NAME} 
-	PUBLIC
-		$<BUILD_INTERFACE:${MODCAM_PROJECT_DIR}/include>
-		$<INSTALL_INTERFACE:include>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-	PRIVATE
-		${MODCAM_PROJECT_DIR}/src
+    ${PROJECT_NAME} 
+    PUBLIC
+        $<BUILD_INTERFACE:${MODCAM_PROJECT_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    PRIVATE
+        ${MODCAM_PROJECT_DIR}/src
 )
 target_compile_options(
-	${PROJECT_NAME} 
-	PRIVATE
-		$<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
+    ${PROJECT_NAME} 
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
 )
 
 generate_export_header(${PROJECT_NAME})
 
 install(
-	TARGETS ${PROJECT_NAME} 
-	EXPORT "${PROJECT_NAME}_Targets"
-	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-	        COMPONENT   "${PROJECT_NAME}_Runtime"
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	        COMPONENT   "${PROJECT_NAME}_Runtime"
-	        NAMELINK_COMPONENT   "${PROJECT_NAME}_Development"
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	        COMPONENT   "${PROJECT_NAME}_Development"
-	INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    TARGETS ${PROJECT_NAME} 
+    EXPORT "${PROJECT_NAME}_Targets"
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            COMPONENT   "${PROJECT_NAME}_Runtime"
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            COMPONENT   "${PROJECT_NAME}_Runtime"
+            NAMELINK_COMPONENT   "${PROJECT_NAME}_Development"
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            COMPONENT   "${PROJECT_NAME}_Development"
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 install(
-	EXPORT      "${PROJECT_NAME}_Targets"
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME} 
-	NAMESPACE   ${PROJECT_NAME}::
-	FILE        "${PROJECT_NAME}-Targets.cmake"
-	COMPONENT   "${PROJECT_NAME}_Development"
+    EXPORT      "${PROJECT_NAME}_Targets"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME} 
+    NAMESPACE   ${PROJECT_NAME}::
+    FILE        "${PROJECT_NAME}-Targets.cmake"
+    COMPONENT   "${PROJECT_NAME}_Development"
 )
