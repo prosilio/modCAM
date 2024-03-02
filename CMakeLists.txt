@@ -46,6 +46,8 @@ list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(MODCAM_PROJECT_DIR "${PROJECT_SOURCE_DIR}")
 
+include(GNUInstallDirs)
+
 # Dependencies
 find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(libigl REQUIRED)
