@@ -1,4 +1,4 @@
-find_package(Doxygen)
+find_package(Doxygen REQUIRED)
 if (NOT DOXYGEN_FOUND)
 	message("Doxygen needs to be installed to build the documentation.")
 	return()

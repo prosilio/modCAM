@@ -76,15 +76,11 @@ if(MODCAM_BUILD_TESTS)
         ${MODCAM_DATA}
     )
 
-    # add_subdirectory("${MODCAM_PROJECT_DIR}/external/doctest")
     add_subdirectory(tests)
 endif()
 
 # Documentation
-# MODCAM_BUILD_DOC override is provided in case this project is included in 
-# another project. Set it to TRUE to build this project's documentation.
-option(BUILD_DOC "Build documentation" ON)
-if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODCAM_BUILD_DOC)
-   AND BUILD_DOC)
+option(MODCAM_BUILD_DOC "Build documentation" ON)
+if(MODCAM_BUILD_DOC)
     add_subdirectory(docs)
 endif()
