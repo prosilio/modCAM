@@ -36,12 +36,6 @@ target_include_directories(
     PRIVATE
         ${MODCAM_PROJECT_DIR}/src
 )
-target_compile_options(
-    ${PROJECT_NAME} 
-    PRIVATE
-        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
-)
 
 generate_export_header(${PROJECT_NAME})
 
