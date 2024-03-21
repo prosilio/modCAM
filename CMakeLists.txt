@@ -15,22 +15,25 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-cmake_minimum_required(VERSION 3.21...3.27)
-if(${CMAKE_VERSION} VERSION_LESS 3.12)
-    cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
-endif()
+cmake_minimum_required(VERSION 3.23...3.27)
 
-# Require out-of-source builds
-file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
-if(EXISTS "${LOC_PATH}")
-    message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build directory. Feel free to remove CMakeCache.txt and CMakeFiles.")
-endif()
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(modcam_version)
 
 project(
     modCAM
     DESCRIPTION "Open source software for Computer Aided Manufacturing (CAM) research"
+	VERSION ${modCAM_VER}
     LANGUAGES CXX
 )
+
+# Require out-of-source builds
+file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
+if(PROJECT_IS_TOP_LEVEL AND EXISTS "${LOC_PATH}")
+    message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build directory. Feel free to remove CMakeCache.txt and CMakeFiles.")
+endif()
+
+configure_file("${modCAM_SOURCE_DIR}/src/modcam/modcam_version.cpp.in" "${modCAM_SOURCE_DIR}/src/modcam/modcam_version.cpp" @ONLY)
 
 # Symbols are hidden by default so that we explicitly define which symbols to 
 # expose.
@@ -42,10 +45,6 @@ if(NOT APPLE)
     set(CMAKE_INSTALL_RPATH $ORIGIN)
 endif()
 
-list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
-set(MODCAM_PROJECT_DIR "${PROJECT_SOURCE_DIR}")
-
 include(GNUInstallDirs)
 
 # Dependencies
@@ -53,7 +52,7 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(libigl REQUIRED)
 
 # Project files
-include("src/modcam/SourceList.cmake")
+include("${modCAM_SOURCE_DIR}/src/modcam/SourceList.cmake")
 add_subdirectory(src)
 
 # Tests
@@ -68,7 +67,7 @@ if(MODCAM_BUILD_TESTS)
         modcam-data 
         ALIAS modcam::data 
         NAMESPACE modcam 
-        WHENCE "${MODCAM_PROJECT_DIR}"
+        WHENCE "${modCAM_SOURCE_DIR}"
         ${MODCAM_DATA}
     )
 

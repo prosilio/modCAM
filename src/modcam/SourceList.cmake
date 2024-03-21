@@ -15,19 +15,21 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-set(MODCAM_SRC_DIR "${MODCAM_PROJECT_DIR}/src/modcam")
-set(MODCAM_INCLUDE_DIR "${MODCAM_PROJECT_DIR}/include/modcam")
+set(MODCAM_SRC_DIR "${modCAM_SOURCE_DIR}/src/modcam")
+set(MODCAM_INCLUDE_DIR "${modCAM_SOURCE_DIR}/include/modcam")
 
 include("${MODCAM_SRC_DIR}/mesh/SourceList.cmake")
 include("${MODCAM_SRC_DIR}/utility/SourceList.cmake")
 
 set(
     MODCAM_SRC
+	"${MODCAM_SRC_DIR}/modcam_version.cpp"
     "${MESH_SRC}"
 )
 
 set(
     MODCAM_HEADERS
+	"${MODCAM_INCLUDE_DIR}/modcam_version.h"
     "${MESH_HEADERS}"
 )
 

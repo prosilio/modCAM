@@ -18,7 +18,7 @@
 add_executable(
     test_modcam 
     "${MODCAM_TEST_SRC}"
-    "${MODCAM_PROJECT_DIR}/tests/run_tests.cpp"
+    "${modCAM_SOURCE_DIR}/tests/run_tests.cpp"
 )
 target_link_libraries(
     test_modcam
@@ -32,10 +32,10 @@ target_link_libraries(
 target_include_directories(
     test_modcam
     PUBLIC
-        $<BUILD_INTERFACE:${MODCAM_PROJECT_DIR}/include>
+        $<BUILD_INTERFACE:${modCAM_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
     PRIVATE
-        ${MODCAM_PROJECT_DIR}/src
+        ${modCAM_SOURCE_DIR}/src
 )
 set_target_properties(
     test_modcam

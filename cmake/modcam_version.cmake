@@ -15,11 +15,4 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-set(MODCAM_DATA_DIR "${modCAM_SOURCE_DIR}/data")
-
-include("${MODCAM_DATA_DIR}/mesh/SourceList.cmake")
-
-set(
-	MODCAM_DATA
-	"${MESH_DATA}"
-)
+set(modCAM_VER 20230326)
