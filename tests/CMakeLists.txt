@@ -15,30 +15,41 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-add_executable(
-    test_modcam 
-    "${MODCAM_TEST_SRC}"
+find_package(doctest REQUIRED)
+
+# Resource files
+include(CMakeRC)
+cmrc_add_resource_library(
+	modcam_data 
+	ALIAS modCAM::data 
+	NAMESPACE modcam 
+	WHENCE "${modCAM_SOURCE_DIR}"
+	"data/mesh/sphere.stl"
+)
+
+add_executable(test_modcam
     "${modCAM_SOURCE_DIR}/tests/run_tests.cpp"
 )
 target_link_libraries(
     test_modcam
     PRIVATE
-        ${PROJECT_NAME}
         doctest::doctest
         Eigen3::Eigen
         igl::igl_core
-        modcam::data
-)
-target_include_directories(
-    test_modcam
-    PUBLIC
-        $<BUILD_INTERFACE:${modCAM_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
-    PRIVATE
-        ${modCAM_SOURCE_DIR}/src
+        modCAM::data
+        modCAM::mesh
 )
 set_target_properties(
     test_modcam
     PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
+)
+
+target_sources(
+	test_modcam
+	PRIVATE
+		"${modCAM_SOURCE_DIR}/src/modcam/mesh/per_vertex_basis.test.cpp"
+		"${modCAM_SOURCE_DIR}/src/modcam/mesh/per_vertex_normals.test.cpp"
+		"${modCAM_SOURCE_DIR}/src/modcam/mesh/principal_curvature.test.cpp"
+		"${modCAM_SOURCE_DIR}/src/modcam/mesh/voronoi_area.test.cpp"
 )

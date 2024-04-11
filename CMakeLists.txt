@@ -47,35 +47,19 @@ endif()
 
 include(GNUInstallDirs)
 
-# Dependencies
-find_package(Eigen3 REQUIRED NO_MODULE)
-find_package(libigl REQUIRED)
+include(modcam_dependencies)
 
 # Project files
-include("${modCAM_SOURCE_DIR}/src/modcam/SourceList.cmake")
 add_subdirectory(src)
-
-# Tests
-option(MODCAM_BUILD_TESTS "Build tests" ON)
-if(MODCAM_BUILD_TESTS)
-    find_package(doctest REQUIRED)
-    
-    # Resource files
-    include(CMakeRC)
-    include("data/SourceList.cmake")
-    cmrc_add_resource_library(
-        modcam-data 
-        ALIAS modcam::data 
-        NAMESPACE modcam 
-        WHENCE "${modCAM_SOURCE_DIR}"
-        ${MODCAM_DATA}
-    )
-
-    add_subdirectory(tests)
-endif()
 
 # Documentation
 option(MODCAM_BUILD_DOC "Build documentation" ON)
 if(MODCAM_BUILD_DOC)
     add_subdirectory(docs)
+endif()
+
+# Tests
+option(MODCAM_ENABLE_TESTING "Build tests" ON)
+if(MODCAM_ENABLE_TESTING)
+    add_subdirectory(tests)
 endif()

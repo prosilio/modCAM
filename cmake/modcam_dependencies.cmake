@@ -1,4 +1,4 @@
-# Copyright 2023 prosilio
+# Copyright 2024 prosilio
 # 
 # This file is part of modCAM, open source software for Computer Aided
 # Manufacturing research.
@@ -15,14 +15,5 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-set(UTILITY_SRC_DIR "${MODCAM_SRC_DIR}/utility")
-set(
-    UTILITY_SRC
-    "${UTILITY_SRC_DIR}/random_orthonormal.cpp"
-)
-
-set(
-    UTILITY_HEADERS
-    "${UTILITY_SRC_DIR}/modulus.h"
-    "${UTILITY_SRC_DIR}/random_orthonormal.h"
-)
+find_package(Eigen3 REQUIRED NO_MODULE)
+find_package(libigl REQUIRED)
