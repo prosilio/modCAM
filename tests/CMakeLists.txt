@@ -24,7 +24,7 @@ cmrc_add_resource_library(
 	ALIAS modCAM::data 
 	NAMESPACE modcam 
 	WHENCE "${modCAM_SOURCE_DIR}"
-	"data/mesh/sphere.stl"
+	"${modCAM_SOURCE_DIR}/data/mesh/sphere.stl"
 )
 
 add_executable(test_modcam
