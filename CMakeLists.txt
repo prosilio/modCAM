@@ -35,15 +35,26 @@ endif()
 
 configure_file("${modCAM_SOURCE_DIR}/src/modcam/modcam_version.cpp.in" "${modCAM_SOURCE_DIR}/src/modcam/modcam_version.cpp" @ONLY)
 
+# Helpful CMake modules
+include(GNUInstallDirs)
+include(GenerateExportHeader)
+
 # Symbols are hidden by default so that we explicitly define which symbols to 
 # expose.
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
-include(GenerateExportHeader)
 
-if(NOT APPLE)
-    set(CMAKE_INSTALL_RPATH $ORIGIN)
+# rpath
+if(APPLE)
+	set(MODCAM_RPATH_BASE @loader_path)
+else()
+	set(MODCAM_RPATH_BASE $ORIGIN)
 endif()
+file(RELATIVE_PATH relDir
+	${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
+	${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
+)
+set(CMAKE_INSTALL_RPATH ${MODCAM_RPATH_BASE} ${MODCAM_RPATH_BASE}/${relDir})
 
 # Require C++20, but let a parent project ask for something higher
 if(DEFINED CMAKE_CXX_STANDARD)
@@ -63,9 +74,7 @@ if(NOT DEFINED CMAKE_CXX_EXTENSIONS)
 endif()
 
 # Target output locations
-include(GNUInstallDirs)
 set(MODCAM_STAGE_DIR ${CMAKE_CURRENT_BINARY_DIR}/staging)
-include(GNUInstallDirs)
 if(NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${MODCAM_STAGE_DIR}/${CMAKE_INSTALL_BINDIR})
 endif()
