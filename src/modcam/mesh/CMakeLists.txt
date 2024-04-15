@@ -28,7 +28,7 @@ target_link_libraries(
 )
 set_target_properties(
 	modCAM_mesh PROPERTIES
-	OUTPUT_NAME mesh
+	OUTPUT_NAME modCAM_mesh
 	EXPORT_NAME mesh
 )
 
