@@ -85,6 +85,16 @@ if(NOT CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${MODCAM_STAGE_DIR}/${CMAKE_INSTALL_LIBDIR})
 endif()
 
+# Install system runtime libraries
+if(WIN32)
+	set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${CMAKE_INSTALL_BINDIR})
+else()
+	set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif()
+set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT modCAM_Runtime)
+include(InstallRequiredSystemLibraries)
+
+# All dependencies here
 include(modcam_dependencies)
 
 # Project files
