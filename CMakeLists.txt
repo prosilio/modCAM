@@ -111,3 +111,6 @@ option(MODCAM_ENABLE_TESTING "Build tests" ON)
 if(MODCAM_ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
+
+# Packaging
+add_subdirectory(packaging)

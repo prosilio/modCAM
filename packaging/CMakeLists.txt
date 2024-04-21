@@ -1,0 +1,36 @@
+# Copyright 2024 prosilio
+# 
+# This file is part of modCAM, open source software for Computer Aided
+# Manufacturing research.
+# 
+# modCAM is free software: you can redistribute it and/or modify it under the 
+# terms of the GNU General Public License as published by the Free Software 
+# Foundation, either version 3 of the License, or (at your option) any later 
+# version.
+# 
+# modCAM is distributed in the hope that it will be useful, but WITHOUT ANY 
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR 
+# A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License along with 
+# modCAM. If not, see <https://www.gnu.org/licenses/>. 
+
+# Allow package maintainers to freely override the path for the configs
+set(MODCAM_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/modCAM"
+    CACHE PATH "CMake package config location"
+)
+mark_as_advanced(MODCAM_INSTALL_CMAKEDIR)
+
+install(
+	FILES modCAMConfig.cmake
+	DESTINATION "${MODCAM_INSTALL_CMAKEDIR}"
+	COMPONENT modCAM_Development
+)
+
+install(
+    EXPORT modCAM_Targets
+    DESTINATION "${MODCAM_INSTALL_CMAKEDIR}"
+    NAMESPACE modCAM::
+    FILE modCAM-Targets.cmake
+    COMPONENT modCAM_Development
+)

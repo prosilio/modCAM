@@ -62,19 +62,12 @@ install(
     TARGETS modCAM_mesh 
     EXPORT modCAM_Targets
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-            COMPONENT "modCAM_Runtime"
+            COMPONENT modCAM_Runtime
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            COMPONENT "modCAM_Runtime"
-            NAMELINK_COMPONENT "modCAM_Development"
+            COMPONENT modCAM_Runtime
+            NAMELINK_COMPONENT modCAM_Development
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            COMPONENT "modCAM_Development"
+            COMPONENT modCAM_Development
 	FILE_SET HEADERS
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-install(
-    EXPORT      modCAM_Targets
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/modCAM 
-    NAMESPACE   modCAM::
-    FILE        "modCAM-Targets.cmake"
-    COMPONENT   "modCAM_Development"
 )
