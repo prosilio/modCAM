@@ -15,12 +15,6 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-# Allow package maintainers to freely override the path for the configs
-set(MODCAM_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/modCAM"
-    CACHE PATH "CMake package config location"
-)
-mark_as_advanced(MODCAM_INSTALL_CMAKEDIR)
-
 install(
 	FILES modCAMConfig.cmake
 	DESTINATION "${MODCAM_INSTALL_CMAKEDIR}"
