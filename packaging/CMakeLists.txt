@@ -28,3 +28,9 @@ install(
     FILE modCAM-Targets.cmake
     COMPONENT modCAM_Development
 )
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+	modCAMConfigVersion.cmake
+	COMPATIBILITY AnyNewerVersion
+)
