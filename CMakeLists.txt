@@ -113,12 +113,11 @@ if(MODCAM_ENABLE_TESTING)
 endif()
 
 # Packaging
-# Allow package maintainers to freely override the path for the configs
-set(MODCAM_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/modCAM"
-    CACHE PATH "CMake package config location"
-)
-mark_as_advanced(MODCAM_INSTALL_CMAKEDIR)
-
 if(PROJECT_IS_TOP_LEVEL)
+	# Allow package maintainers to freely override the path for the configs
+	set(MODCAM_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/modCAM"
+		CACHE PATH "CMake package config location"
+	)
+	mark_as_advanced(MODCAM_INSTALL_CMAKEDIR)
 	add_subdirectory(packaging)
 endif()
