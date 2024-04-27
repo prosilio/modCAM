@@ -119,4 +119,6 @@ set(MODCAM_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/modCAM"
 )
 mark_as_advanced(MODCAM_INSTALL_CMAKEDIR)
 
-add_subdirectory(packaging)
+if(PROJECT_IS_TOP_LEVEL)
+	add_subdirectory(packaging)
+endif()

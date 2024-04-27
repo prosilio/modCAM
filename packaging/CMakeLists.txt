@@ -34,3 +34,38 @@ write_basic_package_version_file(
 	modCAMConfigVersion.cmake
 	COMPATIBILITY AnyNewerVersion
 )
+
+set(CPACK_PACKAGE_NAME modCAM)
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Free and open source CAM software")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME})
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_VERBATIM_VARIABLES YES)
+
+if(WIN32)
+	set(CPACK_GENERATOR ZIP)
+else()
+	set(CPACK_GENERATOR TGZ)
+endif()
+
+set(CPACK_SOURCE_IGNORE_FILES
+	/\\.git/
+	\\.swp
+	\\.orig
+	/CMakeLists\\.txt\\.user
+)
+
+include(CPack)
+
+cpack_add_component(modCAM_Runtime
+	DISPLAY_NAME Runtime
+	DESCRIPTION "Shared libraries and executables"
+	REQUIRED
+	INSTALL_TYPES Full Developer Minimal
+)
+cpack_add_component(modCAM_Development
+	DISPLAY_NAME "Developer pre-requisites"
+	DESCRIPTION "Headers/static libs needed for building"
+	DEPENDS modCAM_Runtime
+	INSTALL_TYPES Full Developer
+)
