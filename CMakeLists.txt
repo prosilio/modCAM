@@ -33,11 +33,14 @@ if(PROJECT_IS_TOP_LEVEL AND EXISTS "${LOC_PATH}")
     message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build directory. Feel free to remove CMakeCache.txt and CMakeFiles.")
 endif()
 
-configure_file("${modCAM_SOURCE_DIR}/src/modcam/modcam_version.cpp.in" "${modCAM_SOURCE_DIR}/src/modcam/modcam_version.cpp" @ONLY)
+# Project options
+option(MODCAM_BUILD_DOC "Build documentation" ON)
+option(MODCAM_ENABLE_TESTING "Build tests" ON)
 
 # Helpful CMake modules
-include(GNUInstallDirs)
+include(CMakeRC)
 include(GenerateExportHeader)
+include(GNUInstallDirs)
 
 # Symbols are hidden by default so that we explicitly define which symbols to 
 # expose.
@@ -97,18 +100,24 @@ include(InstallRequiredSystemLibraries)
 # All dependencies here
 include(modcam_dependencies)
 
+# Project data
+# The data may include rather large files such as triangle meshes, so they are 
+# only included if necessary.
+if(MODCAM_ENABLE_TESTING) # Further conditions may be added in the future.
+	add_subdirectory(data)
+endif()
+
 # Project files
 add_subdirectory(src)
 
 # Documentation
-option(MODCAM_BUILD_DOC "Build documentation" ON)
 if(MODCAM_BUILD_DOC)
     add_subdirectory(docs)
 endif()
 
 # Tests
-option(MODCAM_ENABLE_TESTING "Build tests" ON)
 if(MODCAM_ENABLE_TESTING)
+	enable_testing()
     add_subdirectory(tests)
 endif()
 

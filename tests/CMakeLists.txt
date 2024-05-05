@@ -17,16 +17,6 @@
 
 find_package(doctest REQUIRED)
 
-# Resource files
-include(CMakeRC)
-cmrc_add_resource_library(
-	modcam_data 
-	ALIAS modCAM::data 
-	NAMESPACE modcam 
-	WHENCE "${modCAM_SOURCE_DIR}"
-	"${modCAM_SOURCE_DIR}/data/mesh/sphere.stl"
-)
-
 add_executable(test_modcam
     "${modCAM_SOURCE_DIR}/tests/run_tests.cpp"
 )
@@ -36,20 +26,7 @@ target_link_libraries(
         doctest::doctest
         Eigen3::Eigen
         igl::igl_core
-        modCAM::data
         modCAM::mesh
 )
-set_target_properties(
-    test_modcam
-    PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
-)
 
-target_sources(
-	test_modcam
-	PRIVATE
-		"${modCAM_SOURCE_DIR}/src/modcam/mesh/per_vertex_basis.test.cpp"
-		"${modCAM_SOURCE_DIR}/src/modcam/mesh/per_vertex_normals.test.cpp"
-		"${modCAM_SOURCE_DIR}/src/modcam/mesh/principal_curvature.test.cpp"
-		"${modCAM_SOURCE_DIR}/src/modcam/mesh/voronoi_area.test.cpp"
-)
+add_test(NAME test_modcam COMMAND test_modcam)

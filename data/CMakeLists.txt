@@ -1,4 +1,4 @@
-# Copyright 2023 prosilio
+# Copyright 2024 prosilio
 # 
 # This file is part of modCAM, open source software for Computer Aided
 # Manufacturing research.
@@ -15,7 +15,10 @@
 # You should have received a copy of the GNU General Public License along with 
 # modCAM. If not, see <https://www.gnu.org/licenses/>. 
 
-configure_file("${modCAM_SOURCE_DIR}/src/modcam/modcam_version.cpp.in" "${modCAM_SOURCE_DIR}/src/modcam/modcam_version.cpp" @ONLY)
-
-add_subdirectory("modcam/utility")
-add_subdirectory("modcam/mesh")
+cmrc_add_resource_library(
+	modCAM_data 
+	ALIAS modCAM::data 
+	NAMESPACE modcam 
+	WHENCE "${modCAM_SOURCE_DIR}"
+	"${modCAM_SOURCE_DIR}/data/mesh/sphere.stl"
+)
