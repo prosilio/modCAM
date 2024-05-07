@@ -101,6 +101,7 @@ include(InstallRequiredSystemLibraries)
 include(modcam_dependencies)
 
 # Tests
+# The test_modcam target is available for adding unit tests.
 if(MODCAM_ENABLE_TESTING)
 	enable_testing()
     add_subdirectory(tests)
