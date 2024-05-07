@@ -29,4 +29,5 @@ target_link_libraries(
         modCAM::mesh
 )
 
-add_test(NAME test_modcam COMMAND test_modcam)
+include(doctest)
+doctest_discover_tests(test_modcam)

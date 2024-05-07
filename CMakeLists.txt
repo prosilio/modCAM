@@ -100,6 +100,12 @@ include(InstallRequiredSystemLibraries)
 # All dependencies here
 include(modcam_dependencies)
 
+# Tests
+if(MODCAM_ENABLE_TESTING)
+	enable_testing()
+    add_subdirectory(tests)
+endif()
+
 # Project data
 # The data may include rather large files such as triangle meshes, so they are 
 # only included if necessary.
@@ -113,12 +119,6 @@ add_subdirectory(src)
 # Documentation
 if(MODCAM_BUILD_DOC)
     add_subdirectory(docs)
-endif()
-
-# Tests
-if(MODCAM_ENABLE_TESTING)
-	enable_testing()
-    add_subdirectory(tests)
 endif()
 
 # Packaging

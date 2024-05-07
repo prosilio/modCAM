@@ -75,7 +75,7 @@ install(
 # Unit tests
 if(MODCAM_ENABLE_TESTING)
 	target_sources(
-		modCAM_mesh
+		test_modcam
 		PRIVATE
 			per_vertex_basis.test.cpp
 			per_vertex_normals.test.cpp
@@ -83,9 +83,9 @@ if(MODCAM_ENABLE_TESTING)
 			voronoi_area.test.cpp
 	)
 	target_link_libraries(
-    modCAM_mesh 
-    PRIVATE
-        $<BUILD_INTERFACE:modCAM_data>
-
-)
+		test_modcam 
+		PRIVATE
+			modCAM::data
+			modCAM::mesh
+	)
 endif()
