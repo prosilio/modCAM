@@ -44,6 +44,7 @@ jobs:
           core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
     - name: Install vcpkg
+      shell: bash
       env:
         BOOTSTRAP_FILE_EXT: ${{ contains(runner.os, 'windows') && 'bat' || 'sh' }}
       run: |
