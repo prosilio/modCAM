@@ -45,11 +45,9 @@ jobs:
 
     - name: Install vcpkg
       shell: bash
-      env:
-        BOOTSTRAP_FILE_EXT: ${{ contains(runner.os, 'windows') && 'bat' || 'sh' }}
       run: |
         git clone http://github.com/Microsoft/vcpkg
-        ./vcpkg/bootstrap-vcpkg.$BOOTSTRAP_FILE_EXT -disableMetrics
+        ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
     - name: Configure
       run: >
