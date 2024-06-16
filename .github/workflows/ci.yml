@@ -42,15 +42,14 @@ jobs:
           core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
       run: |
         git clone http://github.com/Microsoft/vcpkg
-        ${{ contains(${{ matrix.os }}, 'windows') && '.\vcpkg\vcpkg-bootstrap.bat' || './vcpkg/vcpkg-bootstrap.sh' }}
 
-    # - name: install vcpkg - Windows
-    #   if: ${{ contains(${{ matrix.os }}, 'windows') }}
-    #   run: .\vcpkg\vcpkg-bootstrap.bat
+    - name: install vcpkg - Windows
+      if: ${{ contains(${{ matrix.os }}, 'windows') }}
+      run: .\vcpkg\vcpkg-bootstrap.bat
 
-    # - name: install vcpkg - Linux
-    #   if: ${{ !contains(${{ matrix.os }}, 'windows') }}
-    #   run: ./vcpkg/vcpkg-bootstrap.sh
+    - name: install vcpkg - Linux
+      if: ${{ !contains(${{ matrix.os }}, 'windows') }}
+      run: ./vcpkg/vcpkg-bootstrap.sh
 
     - name: configure
       run: >
