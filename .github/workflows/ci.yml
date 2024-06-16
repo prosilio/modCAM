@@ -65,7 +65,7 @@ jobs:
 
   # Make sure the documentation is not broken.
   build-docs:
-    name: ${{ matrix.os }}-${{ matrix.cpp_compiler }}-docs
+    name: build-docs
     runs-on: ubuntu-latest
 
     steps:
