@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+env: 
+  VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+
+jobs:
+  build-test:
+    name: ${{ matrix.os }}-${{ matrix.cpp_compiler }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
+      fail-fast: false
+
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build_type: [Release]
+        cpp_compiler: [g++, clang++, cl]
+        exclude:
+          - os: windows-latest
+            cpp_compiler: g++
+          - os: windows-latest
+            cpp_compiler: clang++
+          - os: ubuntu-latest
+            cpp_compiler: cl
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: setup vcpkg
+      uses: actions/github-script@v7
+      with:
+        script: |
+          core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+          core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+      run: |
+        git clone http://github.com/Microsoft/vcpkg
+        ${{ contains(${{ matrix.os }}, 'windows') && '.\vcpkg\vcpkg-bootstrap.bat' || './vcpkg/vcpkg-bootstrap.sh' }}
+
+    # - name: install vcpkg - Windows
+    #   if: ${{ contains(${{ matrix.os }}, 'windows') }}
+    #   run: .\vcpkg\vcpkg-bootstrap.bat
+
+    # - name: install vcpkg - Linux
+    #   if: ${{ !contains(${{ matrix.os }}, 'windows') }}
+    #   run: ./vcpkg/vcpkg-bootstrap.sh
+
+    - name: configure
+      run: >
+        cmake -S .
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        --preset "vcpkg"
+
+    - name: build
+      run: cmake --build build --config ${{ matrix.build_type }}
+
+    - name: test
+      run: ctest --test-dir build --build-config ${{ matrix.build_type }}
