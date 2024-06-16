@@ -27,6 +27,12 @@ project(
     LANGUAGES CXX
 )
 
+# Helpful CMake modules
+include(CMakeDependentOption)
+include(CMakeRC)
+include(GenerateExportHeader)
+include(GNUInstallDirs)
+
 # Require out-of-source builds
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
 if(PROJECT_IS_TOP_LEVEL AND EXISTS "${LOC_PATH}")
@@ -34,13 +40,19 @@ if(PROJECT_IS_TOP_LEVEL AND EXISTS "${LOC_PATH}")
 endif()
 
 # Project options
-option(MODCAM_BUILD_DOC "Build documentation" ON)
-option(MODCAM_ENABLE_TESTING "Build tests" ON)
+option(MODCAM_BUILD_DOC "Build documentation" OFF)
+option(MODCAM_ENABLE_TESTING "Build tests" OFF)
 
-# Helpful CMake modules
-include(CMakeRC)
-include(GenerateExportHeader)
-include(GNUInstallDirs)
+# This option allows us to build only the documentation
+cmake_dependent_option(MODCAM_BUILD_PROJECT "Compile the code" ON "NOT MODCAM_ENABLE_TESTING" ON)
+
+# Documentation
+if(MODCAM_BUILD_DOC)
+    add_subdirectory(docs)
+	if(NOT MODCAM_BUILD_PROJECT)
+		return() # Build only the documentation and nothing else.
+	endif()
+endif()
 
 # Symbols are hidden by default so that we explicitly define which symbols to 
 # expose.
@@ -100,13 +112,6 @@ include(InstallRequiredSystemLibraries)
 # All dependencies here
 include(modcam_dependencies)
 
-# Tests
-# The test_modcam target is available for adding unit tests.
-if(MODCAM_ENABLE_TESTING)
-	enable_testing()
-    add_subdirectory(tests)
-endif()
-
 # Project data
 # The data may include rather large files such as triangle meshes, so they are 
 # only included if necessary.
@@ -114,13 +119,15 @@ if(MODCAM_ENABLE_TESTING) # Further conditions may be added in the future.
 	add_subdirectory(data)
 endif()
 
+# Tests
+# The test_modcam target is available for adding unit tests.
+if(MODCAM_ENABLE_TESTING)
+	enable_testing()
+    add_subdirectory(tests)
+endif()
+
 # Project files
 add_subdirectory(src)
-
-# Documentation
-if(MODCAM_BUILD_DOC)
-    add_subdirectory(docs)
-endif()
 
 # Packaging
 if(PROJECT_IS_TOP_LEVEL)

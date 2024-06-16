@@ -11,8 +11,9 @@ env:
   VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
 
 jobs:
+  # Build and test the code.
   build-test:
-    name: ${{ matrix.os }}-${{ matrix.cpp_compiler }}
+    name: Test ${{ matrix.os }} + ${{ matrix.cpp_compiler }}
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -32,39 +33,47 @@ jobs:
             cpp_compiler: cl
 
     steps:
-    - name: checkout
+    - name: Checkout
       uses: actions/checkout@v4
 
-    - name: setup cache
+    - name: Setup cache
       uses: actions/github-script@v7
       with:
         script: |
           core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
           core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
-    # - name: install vcpkg - Windows
-    #   if: contains(runner.os, 'windows')
-    #   run: |
-    #     git clone http://github.com/Microsoft/vcpkg
-    #     .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
-
-    - name: install vcpkg
-      # if: "!contains(runner.os, 'windows')"
+    - name: Install vcpkg
       env:
         BOOTSTRAP_FILE_EXT: ${{ contains(runner.os, 'windows') && 'bat' || 'sh' }}
       run: |
         git clone http://github.com/Microsoft/vcpkg
         ./vcpkg/bootstrap-vcpkg.$BOOTSTRAP_FILE_EXT -disableMetrics
 
-    - name: configure
+    - name: Configure
       run: >
         cmake -S .
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        --preset "vcpkg"
+        --preset "build-tests"
 
-    - name: build
+    - name: Build
       run: cmake --build build --config ${{ matrix.build_type }}
 
-    - name: test
+    - name: Test
       run: ctest --test-dir build --build-config ${{ matrix.build_type }}
+
+  # Make sure the documentation is not broken.
+  build-docs:
+    name: ${{ matrix.os }}-${{ matrix.cpp_compiler }}-docs
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install Doxygen
+      run: sudo apt-get install -y doxygen
+    
+    - name: Build docs
+      run: cmake -S . --preset "build-docs-only"
