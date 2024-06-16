@@ -45,13 +45,13 @@ jobs:
       if: contains(runner.os, 'windows')
       run: |
         git clone http://github.com/Microsoft/vcpkg
-        .\vcpkg\vcpkg-bootstrap.bat
+        .\vcpkg\bootstrap-vcpkg.bat
 
     - name: install vcpkg - Linux
       if: "!contains(runner.os, 'windows')"
       run: |
         git clone http://github.com/Microsoft/vcpkg
-        ./vcpkg/vcpkg-bootstrap.sh
+        ./vcpkg/bootstrap-vcpkg.sh
 
     - name: configure
       run: >
