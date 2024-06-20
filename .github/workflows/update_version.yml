@@ -1,0 +1,47 @@
+name: Update version
+
+on:
+  push:
+    branches: [ $default-branch ]
+
+env:
+  VERSION_FILE: cmake/modcam_version.cmake
+  MAJOR_VERSION:
+  MINOR_VERSION:
+
+jobs:
+  update-version:
+    name: Update version
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Get current version
+      run: |
+        version="$(< $VERSION_FILE)"
+        IFS='.' read -ra version <<< "$version"
+        MAJOR_VERSION=${version[0]}
+        MINOR_VERSION=${version[1]}
+    
+    - name: Update version
+      run: |
+        utc_date=$(date --utc +"%Y%m%d")
+        if [ "$utc_date" -eq "$MAJOR_VERSION" ]; then
+          if [[ -z "$MINOR_VERSION" ]]; then
+            MINOR_VERSION=0
+          fi
+          (( ++MINOR_VERSION ))
+          echo $utc_date.$MINOR_VERSION > $VERSION_FILE
+        else
+          echo $utc_date > $VERSION_FILE
+        fi
+
+    - name: Push updated version file
+      run: |
+        git add $VERSION_FILE
+        git commit -m 'Update version'
+        git fetch
+        git push
+
