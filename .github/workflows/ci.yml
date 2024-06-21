@@ -64,6 +64,7 @@ jobs:
   test:
     name: Test ${{ inputs.os }} + ${{ inputs.cpp_compiler }} + ${{ inputs.build_type }}
     runs-on: ${{ inputs.os }}
+    needs: build
     steps:
     - name: Download build artifacts
       uses: actions/download-artifact@v4
