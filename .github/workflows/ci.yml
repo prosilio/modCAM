@@ -64,7 +64,7 @@ jobs:
 
   # Make sure the documentation is not broken.
   build-docs:
-    name: build-docs
+    name: Build docs
     runs-on: ubuntu-latest
 
     steps:
