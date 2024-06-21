@@ -65,20 +65,22 @@ jobs:
         retention-days: 30
 
   # Make sure the documentation is not broken.
-  # build-docs:
-  #   name: Build docs
-  #   runs-on: ubuntu-latest
+  build-docs:
+    name: Build docs
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #   - name: Checkout
-  #     uses: actions/checkout@v4
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
 
-  #   - name: Install Doxygen
-  #     run: sudo apt-get install -y doxygen
+    - name: Install Doxygen
+      run: sudo apt-get install -y doxygen
     
-  #   - name: Build docs
-  #     run: cmake -S . --preset "build-docs-only"
-  
+    - name: Build docs
+      run: |
+        cmake -S . --preset "build-docs-only"
+        cmake --build build --config Release
+
   # update-version:
   #   name: Update version
   #   runs-on: ubuntu-latest
