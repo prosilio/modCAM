@@ -1,11 +1,18 @@
 name: CI
 
 on:
-  push:
-    branches: [ $default-branch ]
-    paths-ignore: [ cmake/modcam_version.cmake ]
-  pull_request:
-    paths-ignore: [ cmake/modcam_version.cmake ]
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+      build_type:
+        default: 'Release'
+        required: true
+        type: string
+      cpp_compiler:
+        required: true
+        type: string
 
 env: 
   VCPKG_ROOT: "./vcpkg"
@@ -15,25 +22,9 @@ env:
   MINOR_VERSION:
 
 jobs:
-  # Build and test the code.
-  test:
-    name: Test ${{ matrix.os }} + ${{ matrix.cpp_compiler }}
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        build_type: [Release]
-        cpp_compiler: [g++, clang++, cl]
-        exclude:
-          - os: windows-latest
-            cpp_compiler: g++
-          - os: windows-latest
-            cpp_compiler: clang++
-          - os: ubuntu-latest
-            cpp_compiler: cl
+  build:
+    name: Build ${{ inputs.os }} + ${{ inputs.cpp_compiler }} + ${{ inputs.build_type }}
+    runs-on: ${{ inputs.os }}
 
     steps:
     - name: Checkout
@@ -55,69 +46,88 @@ jobs:
     - name: Configure
       run: >
         cmake -S .
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DCMAKE_CXX_COMPILER=${{ inputs.cpp_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ inputs.build_type }}
         --preset "build-tests"
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }}
+      run: cmake --build build --config ${{ inputs.build_type }}
+    
+    - name: Upload build artifacts
+      id: build-artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-${{ inputs.os }}-${{ inputs.cpp_compiler }}-${{ inputs.build_type }}
+        path: build/
+        retention-days: 30
 
+  test:
+    name: Test ${{ inputs.os }} + ${{ inputs.cpp_compiler }} + ${{ inputs.build_type }}
+    runs-on: ${{ inputs.os }}
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-${{ inputs.os }}-${{ inputs.cpp_compiler }}-${{ inputs.build_type }}
+        path: build/
     - name: Test
-      run: ctest --test-dir build --build-config ${{ matrix.build_type }}
+      run: |
+        ls build/
+        ctest --test-dir build --build-config ${{ inputs.build_type }}
 
   # Make sure the documentation is not broken.
-  build-docs:
-    name: Build docs
-    runs-on: ubuntu-latest
+  # build-docs:
+  #   name: Build docs
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v4
 
-    - name: Install Doxygen
-      run: sudo apt-get install -y doxygen
+  #   - name: Install Doxygen
+  #     run: sudo apt-get install -y doxygen
     
-    - name: Build docs
-      run: cmake -S . --preset "build-docs-only"
+  #   - name: Build docs
+  #     run: cmake -S . --preset "build-docs-only"
   
-  update-version:
-    name: Update version
-    runs-on: ubuntu-latest
-    needs: [ test, build-docs ]
-    if: github.ref_name == $default-branch
-    permissions: 
-      contents: write
+  # update-version:
+  #   name: Update version
+  #   runs-on: ubuntu-latest
+  #   needs: [ test, build-docs ]
+  #   if: github.ref_name == $default-branch
+  #   permissions: 
+  #     contents: write
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v4
 
-    - name: Get current version
-      run: |
-        version="$(< $VERSION_FILE)"
-        IFS='.' read -ra version <<< "$version"
-        MAJOR_VERSION=${version[0]}
-        MINOR_VERSION=${version[1]}
+  #   - name: Get current version
+  #     run: |
+  #       version="$(< $VERSION_FILE)"
+  #       IFS='.' read -ra version <<< "$version"
+  #       MAJOR_VERSION=${version[0]}
+  #       MINOR_VERSION=${version[1]}
     
-    - name: Update version
-      run: |
-        utc_date=$(date --utc +"%Y%m%d")
-        if [ "$utc_date" -eq "$MAJOR_VERSION" ]; then
-          if [[ -z "$MINOR_VERSION" ]]; then
-            MINOR_VERSION=0
-          fi
-          (( ++MINOR_VERSION ))
-          echo $utc_date.$MINOR_VERSION > $VERSION_FILE
-        else
-          echo $utc_date > $VERSION_FILE
-        fi
+  #   - name: Update version
+  #     run: |
+  #       utc_date=$(date --utc +"%Y%m%d")
+  #       if [ "$utc_date" -eq "$MAJOR_VERSION" ]; then
+  #         if [[ -z "$MINOR_VERSION" ]]; then
+  #           MINOR_VERSION=0
+  #         fi
+  #         (( ++MINOR_VERSION ))
+  #         echo $utc_date.$MINOR_VERSION > $VERSION_FILE
+  #       else
+  #         echo $utc_date > $VERSION_FILE
+  #       fi
 
-    - name: Push updated version file
-      run: |
-        git add $VERSION_FILE
-        git -c user.name='CI workflow' -c user.email='<>' commit -m 'Update version'
-        version="$(< $VERSION_FILE)"
-        git tag $version
-        git fetch
-        git push
-        git push origin $version
+  #   - name: Push updated version file
+  #     run: |
+  #       git add $VERSION_FILE
+  #       git -c user.name='CI workflow' -c user.email='<>' commit -m 'Update version'
+  #       version="$(< $VERSION_FILE)"
+  #       git tag $version
+  #       git fetch
+  #       git push
+  #       git push origin $version
