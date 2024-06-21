@@ -22,8 +22,8 @@ env:
   MINOR_VERSION:
 
 jobs:
-  build:
-    name: Build ${{ inputs.os }} + ${{ inputs.cpp_compiler }} + ${{ inputs.build_type }}
+  build-and-test:
+    name: Build and test on ${{ inputs.os }} + ${{ inputs.cpp_compiler }} + ${{ inputs.build_type }}
     runs-on: ${{ inputs.os }}
 
     steps:
@@ -52,7 +52,10 @@ jobs:
 
     - name: Build
       run: cmake --build build --config ${{ inputs.build_type }}
-    
+
+    - name: Test
+      run: ctest --test-dir build --build-config ${{ inputs.build_type }}
+
     - name: Upload build artifacts
       id: build-artifact
       uses: actions/upload-artifact@v4
@@ -60,21 +63,6 @@ jobs:
         name: build-${{ inputs.os }}-${{ inputs.cpp_compiler }}-${{ inputs.build_type }}
         path: build/
         retention-days: 30
-
-  test:
-    name: Test ${{ inputs.os }} + ${{ inputs.cpp_compiler }} + ${{ inputs.build_type }}
-    runs-on: ${{ inputs.os }}
-    needs: build
-    steps:
-    - name: Download build artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: build-${{ inputs.os }}-${{ inputs.cpp_compiler }}-${{ inputs.build_type }}
-        path: build/
-    - name: Test
-      run: |
-        ls build/
-        ctest --test-dir build --build-config ${{ inputs.build_type }}
 
   # Make sure the documentation is not broken.
   # build-docs:
