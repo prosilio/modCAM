@@ -47,6 +47,7 @@ jobs:
           VERSION=$utc_date
         fi
         echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "$VERSION"
 
   build-and-test:
     name: Build and test on ${{ matrix.os }} + ${{ matrix.cpp_compiler }} + ${{ matrix.build_type }}
