@@ -72,7 +72,9 @@ jobs:
 
     - name: Update version
       shell: bash
-      run: echo $VERSION > $VERSION_FILE
+      run: |
+        echo "$VERSION"
+        echo $VERSION > $VERSION_FILE
 
     - name: Set up cache
       uses: actions/github-script@v7
