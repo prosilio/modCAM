@@ -11,7 +11,6 @@ env:
   VCPKG_ROOT: "./vcpkg"
   VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
   VERSION_FILE: cmake/modcam_version.cmake
-  VERSION: 
 
 jobs:
   update-version:
@@ -29,10 +28,10 @@ jobs:
 
     - name: Get current version
       run: |
-        VERSION="$(< $VERSION_FILE)"
-        IFS='.' read -ra VERSION <<< "$VERSION"
-        MAJOR_VERSION=${VERSION[0]}
-        MINOR_VERSION=${VERSION[1]}
+        version="$(< $VERSION_FILE)"
+        IFS='.' read -ra version <<< "$version"
+        MAJOR_VERSION=${version[0]}
+        MINOR_VERSION=${version[1]}
 
     - name: Update version
       run: |
@@ -42,10 +41,20 @@ jobs:
             MINOR_VERSION=0
           fi
           (( ++MINOR_VERSION ))
-          VERSION=$utc_date.$MINOR_VERSION
+          echo $utc_date.$MINOR_VERSION > $VERSION_FILE
         else
-          VERSION=$utc_date
+          echo $utc_date > $VERSION_FILE
         fi
+        version="$(< $VERSION_FILE)"
+
+    - name: Upload version file
+      uses: actions/upload-artifact@v4
+      with:
+        name: version-file
+        path: ${{ env.VERSION_FILE }}
+        if-no-files-found: error
+        overwrite: true
+        retention-days: 1
 
   build-and-test:
     name: Build and test on ${{ matrix.os }} + ${{ matrix.cpp_compiler }} + ${{ matrix.build_type }}
@@ -70,9 +79,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Update version
-      shell: bash
-      run: echo $VERSION > $VERSION_FILE
+    - name: Download version artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: version-file
 
     - name: Set up cache
       uses: actions/github-script@v7
@@ -117,8 +127,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Update version
-      run: echo $VERSION > $VERSION_FILE
+    - name: Download version artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: version-file
 
     - name: Install Doxygen
       run: sudo apt-get install -y doxygen
@@ -138,15 +150,18 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Update version
-      run: echo $VERSION > $VERSION_FILE
+    - name: Download version artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: version-file
 
     - name: Push updated version file
       id: version-tag
       run: |
         git add $VERSION_FILE
         git -c user.name='CI workflow' -c user.email='<>' commit -m 'Update version'
-        git tag $VERSION
+        version="$(< $VERSION_FILE)"
+        git tag $version
         git fetch
         git push
-        git push origin $VERSION
+        git push origin $version
