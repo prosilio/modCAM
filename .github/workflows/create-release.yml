@@ -1,0 +1,39 @@
+name: Create release
+
+on:
+  push:
+    branches: [ $default-branch ]
+    paths: [ cmake/modcam_version.cmake ]
+
+jobs:
+  create-release:
+    name: Release for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        build_type: [Release]
+        include:
+          - os: windows-latest
+            cpp_compiler: cl
+          - os: ubuntu-latest
+            cpp_compiler: g++
+
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-${{ matrix.os }}-${{ matrix.cpp_compiler }}-${{ matrix.build_type }}
+        path: build/
+        run-id: ${{ github.event.workflow_run.id }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Create package
+      run: |
+        cd build/
+        cpack -C ${{ matrix.build_type }}
+
+    - name: Create release
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: gh release create ./build/*.tar.gz ./build/*.zip
