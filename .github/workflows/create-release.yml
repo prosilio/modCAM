@@ -2,7 +2,7 @@ name: Create release
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ main ]
     paths: [ cmake/modcam_version.cmake ]
 
 jobs:
