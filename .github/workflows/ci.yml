@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ main ]
     paths-ignore: [ cmake/modcam_version.cmake ]
   pull_request:
     paths-ignore: [ cmake/modcam_version.cmake ]
