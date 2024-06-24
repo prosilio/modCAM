@@ -30,7 +30,10 @@ jobs:
 
     - name: Get current version
       run: |
-        version=$(git describe --tags $(git rev-list --branches=main --tags --max-count=1))
+        version="$(< $VERSION_FILE)"
+        pattern='([[:digit:]]{8}(\.)?[[:digit:]]*)'
+        [[ $version =~ $pattern ]]
+        version="${BASH_REMATCH[1]}"
         echo "version: $version"
         IFS='.' read -ra version <<< "$version"
         MAJOR_VERSION=${version[0]}
