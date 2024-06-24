@@ -1,1 +1,2 @@
-set(modCAM_VER 20230326)
+set(modCAM_VER 20240624)
+
