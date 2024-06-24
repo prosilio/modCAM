@@ -186,10 +186,10 @@ jobs:
       matrix:
         build_type: [ Release ]
         include:
-          - os: [ windows-latest ]
-            cpp_compiler: [ cl ]
-          - os: [ ubuntu-latest ]
-            cpp_compiler: [ g++ ]
+          - os: windows-latest
+            cpp_compiler: cl
+          - os: ubuntu-latest
+            cpp_compiler: g++
 
     steps:
     - name: Checkout
