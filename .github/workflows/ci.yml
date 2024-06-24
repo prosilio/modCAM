@@ -18,9 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions: 
       contents: write
-    env:
-      MAJOR_VERSION:
-      MINOR_VERSION:
+    outputs:
+      version: ${{ steps.update-version.outputs.version }}
 
     steps:
     - name: Checkout
@@ -29,23 +28,31 @@ jobs:
     - name: Get current version
       run: |
         version="$(< $VERSION_FILE)"
+        pattern='([[:digit:]]{8}(\.)?[[:digit:]]*)'
+        [[ $version =~ $pattern ]]
+        version="${BASH_REMATCH[1]}"
+        echo "version: $version"
         IFS='.' read -ra version <<< "$version"
-        MAJOR_VERSION=${version[0]}
-        MINOR_VERSION=${version[1]}
+        echo "MAJOR_VERSION=${version[0]}" >> "$GITHUB_ENV"
+        echo "MINOR_VERSION=${version[1]}" >> "$GITHUB_ENV"
 
     - name: Update version
+      id: update-version
       run: |
+        echo "MAJOR_VERSION: $MAJOR_VERSION"
+        echo "MINOR_VERSION: $MINOR_VERSION"
         utc_date=$(date --utc +"%Y%m%d")
         if [ "$utc_date" -eq "$MAJOR_VERSION" ]; then
           if [[ -z "$MINOR_VERSION" ]]; then
             MINOR_VERSION=0
           fi
           (( ++MINOR_VERSION ))
-          echo $utc_date.$MINOR_VERSION > $VERSION_FILE
+          version=$utc_date.$MINOR_VERSION
         else
-          echo $utc_date > $VERSION_FILE
+          version=$utc_date
         fi
-        version="$(< $VERSION_FILE)"
+        echo -e "set(modCAM_VER $version)\n" > $VERSION_FILE
+        echo "version=$version" >> "$GITHUB_OUTPUT"
 
     - name: Upload version file
       uses: actions/upload-artifact@v4
@@ -83,6 +90,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: version-file
+        path: cmake/
 
     - name: Set up cache
       uses: actions/github-script@v7
@@ -131,6 +139,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: version-file
+        path: cmake/
 
     - name: Install Doxygen
       run: sudo apt-get install -y doxygen
@@ -154,13 +163,15 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: version-file
+        path: cmake/
 
     - name: Push updated version file
       id: version-tag
       run: |
         git add $VERSION_FILE
         git -c user.name='CI workflow' -c user.email='<>' commit -m 'Update version'
-        version="$(< $VERSION_FILE)"
+        version=${{ needs.update-version.outputs.version }}
+        echo "version: $version"
         git tag $version
         git fetch
         git push
