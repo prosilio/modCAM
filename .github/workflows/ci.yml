@@ -69,9 +69,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        build_type: [Release]
-        cpp_compiler: [g++, clang++, cl]
+        os: [ ubuntu-latest, windows-latest ]
+        build_type: [ Release ]
+        cpp_compiler: [ g++, clang++, cl ]
         exclude:
           - os: windows-latest
             cpp_compiler: g++
@@ -184,14 +184,17 @@ jobs:
 
     strategy:
       matrix:
-        build_type: [Release]
+        build_type: [ Release ]
         include:
-          - os: windows-latest
-            cpp_compiler: cl
-          - os: ubuntu-latest
-            cpp_compiler: g++
+          - os: [ windows-latest ]
+            cpp_compiler: [ cl ]
+          - os: [ ubuntu-latest ]
+            cpp_compiler: [ g++ ]
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
