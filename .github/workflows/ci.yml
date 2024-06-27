@@ -181,6 +181,8 @@ jobs:
     name: Release for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: [ build-and-test, push-version ]
+    permissions:
+      contents: write
 
     strategy:
       matrix:
@@ -205,6 +207,15 @@ jobs:
       run: |
         cd build/
         cpack -C ${{ matrix.build_type }}
+
+    - name: Upload CPack log
+      uses: actions/upload-artifact@v4
+      with:
+        name: cpack-log
+        path: build/_CPack_Packages/Linux/TGZ/PreinstallOutput.log
+        if-no-files-found: error
+        overwrite: true
+        retention-days: 60
 
     - name: Create release
       env:
