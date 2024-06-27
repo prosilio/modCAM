@@ -111,7 +111,10 @@ jobs:
         --preset "build-tests"
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }}
+      run: |
+        cmake --build build --config ${{ matrix.build_type }}
+        cd build/
+        cpack -C ${{ matrix.build_type }}
 
     - name: Test
       run: ctest --test-dir build --build-config ${{ matrix.build_type }}
