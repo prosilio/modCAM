@@ -71,12 +71,10 @@ jobs:
       matrix:
         os: [ ubuntu-latest, windows-latest ]
         build_type: [ Release ]
-        cpp_compiler: [ g++, clang++, cl ]
+        cpp_compiler: [ g++, cl ]
         exclude:
           - os: windows-latest
             cpp_compiler: g++
-          - os: windows-latest
-            cpp_compiler: clang++
           - os: ubuntu-latest
             cpp_compiler: cl
 
@@ -111,19 +109,23 @@ jobs:
         --preset "build-tests"
 
     - name: Build
-      run: |
-        cmake --build build --config ${{ matrix.build_type }}
-        cd build/
-        cpack -C ${{ matrix.build_type }}
+      run: cmake --build build --config ${{ matrix.build_type }}
 
     - name: Test
       run: ctest --test-dir build --build-config ${{ matrix.build_type }}
 
-    - name: Upload build artifacts
+    - name: Package
+      run: |
+        cd build/
+        cpack -C ${{ matrix.build_type }} -B ./package
+
+    - name: Upload package artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: build-${{ matrix.os }}-${{ matrix.cpp_compiler }}-${{ matrix.build_type }}
-        path: build/
+        name: package-${{ matrix.os }}-${{ matrix.cpp_compiler }}-${{ matrix.build_type }}
+        path: |
+          build/package/*.tar.gz
+          build/package/*.zip
         retention-days: 5
 
   # Make sure the documentation is not broken.
@@ -181,47 +183,18 @@ jobs:
         git push origin $version
 
   create-release:
-    name: Release for ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Create release
+    runs-on: ubuntu-latest
     needs: [ build-and-test, push-version ]
-    permissions:
-      contents: write
-
-    strategy:
-      matrix:
-        build_type: [ Release ]
-        include:
-          - os: windows-latest
-            cpp_compiler: cl
-          - os: ubuntu-latest
-            cpp_compiler: g++
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Download build artifacts
+    - name: Download package artifacts
       uses: actions/download-artifact@v4
       with:
-        name: build-${{ matrix.os }}-${{ matrix.cpp_compiler }}-${{ matrix.build_type }}
-        path: build/
-    
-    - name: Create package
-      run: |
-        cd build/
-        cpack -C ${{ matrix.build_type }}
-
-    - name: Upload CPack log
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: cpack-log
-        path: build/_CPack_Packages/Linux/TGZ/PreinstallOutput.log
-        if-no-files-found: error
-        overwrite: true
-        retention-days: 60
+        path: package-artifacts
+        merge-multiple: true
 
     - name: Create release
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: gh release create ./build/*.tar.gz ./build/*.zip
+      run: ls -R #gh release create ./package-artifacts/*
