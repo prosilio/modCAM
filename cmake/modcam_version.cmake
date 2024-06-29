@@ -1,2 +1,2 @@
-set(modCAM_VER 20240629.5)
+set(modCAM_VER 20240629.6)
 
