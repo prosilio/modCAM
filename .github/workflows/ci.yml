@@ -185,7 +185,7 @@ jobs:
   create-release:
     name: Create release
     runs-on: ubuntu-latest
-    needs: [ build-and-test, push-version ]
+    needs: [ update-version, build-and-test, push-version ]
     permissions:
       contents: write
 
